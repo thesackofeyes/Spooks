@@ -1,0 +1,33 @@
+[gd_scene format=4 uid="uid://jr8lgekld0fj"]
+
+[ext_resource type="TileSet" uid="uid://lfp62t3n5luv" path="res://Assets/Tilesheets/iso_tileset.tres" id="1_4ln8h"]
+[ext_resource type="Script" uid="uid://cmsmwbfp3jjdc" path="res://Scripts/combat.gd" id="1_ut0kg"]
+[ext_resource type="Script" uid="uid://di6xe873pybk" path="res://Scripts/grid.gd" id="2_ubpar"]
+[ext_resource type="Script" uid="uid://h6s7a1ct4fnu" path="res://Scripts/HoverGrid.gd" id="3_ut0kg"]
+[ext_resource type="PackedScene" uid="uid://chl8qhvvlnr2v" path="res://Scenes/spook.tscn" id="4_ubpar"]
+[ext_resource type="PackedScene" uid="uid://od74nstxu6e0" path="res://Scenes/button.tscn" id="6_yt1oa"]
+
+[node name="Combat" type="Node2D" unique_id=1284863964]
+script = ExtResource("1_ut0kg")
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=419210108]
+
+[node name="Grid" type="TileMapLayer" parent="." unique_id=2021170782]
+tile_map_data = PackedByteArray("AAABAAAAAQAAAAAAAAABAAEAAQAAAAAAAAABAAIAAQAAAAAAAAABAAMAAQAAAAAAAAACAAMAAQAAAAAAAAACAAQAAQAAAAAAAAACAAUAAQAAAAAAAAACAAYAAQAAAAAAAAACAAcAAQAAAAAAAAACAAgAAQAAAAAAAAACAAkAAQAAAAAAAAADAAgAAQAAAAAAAAADAAcAAQAAAAAAAAADAAYAAQAAAAAAAAAEAAUAAQAAAAAAAAAFAAQAAQAAAAAAAAAFAAMAAQAAAAAAAAAGAAIAAQAAAAAAAAAHAAIAAQAAAAAAAAAHAAMAAQAAAAAAAAAHAAQAAQAAAAAAAAAHAAUAAQAAAAAAAAAHAAYAAQAAAAAAAAAHAAcAAQAAAAAAAAAHAAgAAQAAAAAAAAAGAAgAAQAAAAAAAAAGAAcAAQAAAAAAAAAGAAYAAQAAAAAAAAAGAAUAAQAAAAAAAAAGAAQAAQAAAAAAAAAGAAMAAQAAAAAAAAAGAAEAAQAAAAAAAAAFAAEAAQAAAAAAAAAFAAAAAQAAAAAAAAAEAAAAAQAAAAAAAAADAAAAAQAAAAAAAAADAAEAAQAAAAAAAAADAAIAAQAAAAAAAAADAAMAAQAAAAAAAAADAAUAAQAAAAAAAAADAAQAAQAAAAAAAAAEAAIAAQAAAAAAAAAFAAIAAQAAAAAAAAAFAAUAAQAAAAAAAAAFAAcAAQAAAAAAAAAFAAYAAQAAAAAAAAA=")
+tile_set = ExtResource("1_4ln8h")
+script = ExtResource("2_ubpar")
+
+[node name="HoverGrid" type="Node2D" parent="." unique_id=869890431]
+script = ExtResource("3_ut0kg")
+
+[node name="Spook" parent="." unique_id=687606312 instance=ExtResource("4_ubpar")]
+
+[node name="MoveButton" parent="." unique_id=260208266 instance=ExtResource("6_yt1oa")]
+offset_left = -571.0
+offset_top = -321.0
+offset_right = -571.0
+offset_bottom = -321.0
+toggle_mode = true
+text = "Move"
+
+[connection signal="toggled" from="MoveButton" to="." method="_on_button_toggled" flags=18 binds= ["movement"]]

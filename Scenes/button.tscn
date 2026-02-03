@@ -1,0 +1,7 @@
+[gd_scene format=3 uid="uid://od74nstxu6e0"]
+
+[node name="Button" type="Button" unique_id=1286565152]
+offset_right = 8.0
+offset_bottom = 8.0
+
+[node name="Button Background" type="Sprite2D" parent="." unique_id=1373556707]

@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="GameData" format=3]
+
+[ext_resource type="Script" path="res://game_state.gd" id="1_63w3r"]
+[ext_resource type="Script" path="res://Scripts/unit_data.gd" id="2_4uvm8"]
+
+[sub_resource type="Resource" id="Resource_3i6ow"]
+script = ExtResource("2_4uvm8")
+id = "unit_3426400233_1679426307"
+unit_class = "Spook"
+unit_subclass = "Apprentice"
+
+[resource]
+script = ExtResource("1_63w3r")
+units = Array[ExtResource("2_4uvm8")]([SubResource("Resource_3i6ow")])
