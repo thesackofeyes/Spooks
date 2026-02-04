@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="Ability" format=3 uid="uid://vyqwxu8evpb0"]
+
+[ext_resource type="Script" uid="uid://bp34lrn2n88r5" path="res://Scripts/ability.gd" id="1_6w37w"]
+
+[resource]
+script = ExtResource("1_6w37w")
+name = "Widdershins Strike"
+icon_x = 1
+description = "Allows instant transportation to any unoccupied tile."
+cost = 8
+compatible_subclasses = Array[String](["All"])

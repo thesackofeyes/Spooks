@@ -12,3 +12,4 @@ class_name UnitData
 @export var stamina: int = 5
 @export var intelligence: int = 5
 @export var presence: int = 5
+@export var abilities: Array[Ability] = []

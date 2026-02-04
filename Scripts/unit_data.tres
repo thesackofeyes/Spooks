@@ -1,7 +1,11 @@
 [gd_resource type="Resource" script_class="UnitData" format=3 uid="uid://myahhaaqlbrj"]
 
+[ext_resource type="Script" uid="uid://bp34lrn2n88r5" path="res://Scripts/ability.gd" id="1_msff1"]
 [ext_resource type="Script" uid="uid://ckohomhh5krns" path="res://Scripts/unit_data.gd" id="1_y4i15"]
+[ext_resource type="Resource" uid="uid://b7s42xbh8d7y2" path="res://Abilities/teleport.tres" id="2_dtqq2"]
+[ext_resource type="Resource" uid="uid://vyqwxu8evpb0" path="res://Abilities/widdershins_strike.tres" id="3_lreo8"]
 
 [resource]
 script = ExtResource("1_y4i15")
+abilities = Array[ExtResource("1_msff1")]([ExtResource("2_dtqq2"), ExtResource("3_lreo8")])
 metadata/_custom_type_script = "uid://ckohomhh5krns"

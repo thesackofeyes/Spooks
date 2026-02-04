@@ -1,0 +1,20 @@
+Update ability button to include casting cost
+Update ability button to include hover tooltip
+	- Name, Description, Cost, Range
+
+Link 'Spook' Scene to savedata units (Mirror Buttons?)
+initialise combat with units array
+
+Create Enemy Unit Scene
+Create Enemy Unit Data Structure
+Create Enemy Info on Hover
+
+Create turn order/initiative system
+
+Implement Unit Health Tracking
+
+Implement basic attack (Melee for now, range after additional classes)
+
+Limit Movement to an endurance stat (Can split movements)
+
+Limit Attack to once per turn

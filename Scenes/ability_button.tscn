@@ -1,0 +1,56 @@
+[gd_scene format=3 uid="uid://bdbjm2cjiu05r"]
+
+[ext_resource type="Script" uid="uid://bia8xnmsapxct" path="res://Scripts/ability_button.gd" id="1_83f4s"]
+[ext_resource type="Texture2D" uid="uid://bi7p51e5pri5" path="res://Assets/UI/Button Background Landscape.png" id="2_83f4s"]
+[ext_resource type="Texture2D" uid="uid://f5o4lg4kska" path="res://Assets/Icons/ability_sprite_sheet.png" id="2_u1jq6"]
+[ext_resource type="LabelSettings" uid="uid://bd2b8umd3utg7" path="res://Assets/UI/button_labels.tres" id="3_d2bew"]
+
+[sub_resource type="Theme" id="Theme_smycg"]
+Button/colors/icon_hover_pressed_color = Color(0, 0, 0, 0.52156866)
+Button/colors/icon_normal_color = Color(1, 1, 1, 0)
+Button/colors/icon_pressed_color = Color(0, 0, 0, 0.49019608)
+
+[node name="AbilityButton" type="Button" unique_id=2016880670]
+custom_minimum_size = Vector2(128, 96)
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -576.0
+offset_top = -324.0
+offset_right = -448.0
+offset_bottom = -228.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.75, 0.75)
+mouse_default_cursor_shape = 2
+theme = SubResource("Theme_smycg")
+toggle_mode = true
+icon_alignment = 1
+expand_icon = true
+script = ExtResource("1_83f4s")
+
+[node name="ButtonIcon" type="Sprite2D" parent="." unique_id=1863448428]
+texture_filter = 3
+position = Vector2(64, 60)
+scale = Vector2(1.5, 1.5)
+texture = ExtResource("2_u1jq6")
+hframes = 16
+vframes = 16
+
+[node name="ButtonBackground" type="Sprite2D" parent="." unique_id=1373556707]
+z_index = -1
+texture_filter = 5
+position = Vector2(64.000015, 48)
+texture = ExtResource("2_83f4s")
+
+[node name="Name" type="Label" parent="." unique_id=457752913]
+layout_mode = 0
+offset_left = 9.0
+offset_top = 4.0
+offset_right = 119.0
+offset_bottom = 22.0
+label_settings = ExtResource("3_d2bew")
+horizontal_alignment = 1
+autowrap_mode = 2

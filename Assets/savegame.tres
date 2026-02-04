@@ -1,14 +1,18 @@
 [gd_resource type="Resource" script_class="GameData" format=3]
 
-[ext_resource type="Script" path="res://game_state.gd" id="1_63w3r"]
-[ext_resource type="Script" path="res://Scripts/unit_data.gd" id="2_4uvm8"]
+[ext_resource type="Script" path="res://game_state.gd" id="1_fop8n"]
+[ext_resource type="Script" path="res://Scripts/unit_data.gd" id="2_f2rtb"]
+[ext_resource type="Script" path="res://Scripts/ability.gd" id="3_5gfxt"]
+[ext_resource type="Resource" path="res://Abilities/teleport.tres" id="4_ov0du"]
+[ext_resource type="Resource" path="res://Abilities/widdershins_strike.tres" id="5_bp00r"]
 
-[sub_resource type="Resource" id="Resource_3i6ow"]
-script = ExtResource("2_4uvm8")
-id = "unit_3426400233_1679426307"
+[sub_resource type="Resource" id="Resource_5ie8h"]
+script = ExtResource("2_f2rtb")
+id = "unit_2084933970_308163575"
 unit_class = "Spook"
 unit_subclass = "Apprentice"
+abilities = Array[ExtResource("3_5gfxt")]([ExtResource("4_ov0du"), ExtResource("5_bp00r")])
 
 [resource]
-script = ExtResource("1_63w3r")
-units = Array[ExtResource("2_4uvm8")]([SubResource("Resource_3i6ow")])
+script = ExtResource("1_fop8n")
+units = Array[ExtResource("2_f2rtb")]([SubResource("Resource_5ie8h")])

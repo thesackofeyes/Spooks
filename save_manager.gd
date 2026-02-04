@@ -32,6 +32,11 @@ func create_unit(unit_class: String, unit_subclass: String = "") -> UnitData:
 	var unit := template.duplicate()
 	unit.id = _generate_unit_id()
 	
+	var teleport = load("res://Abilities/teleport.tres")
+	var widdershins_strike = load("res://Abilities/widdershins_strike.tres")
+	unit.abilities.append(teleport)
+	unit.abilities.append(widdershins_strike)
+	
 	data.units.append(unit)
 	return unit
 

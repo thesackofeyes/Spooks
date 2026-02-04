@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="Ability" format=3 uid="uid://b7s42xbh8d7y2"]
+
+[ext_resource type="Script" uid="uid://bp34lrn2n88r5" path="res://Scripts/ability.gd" id="1_nlp10"]
+
+[resource]
+script = ExtResource("1_nlp10")
+name = "Teleport"
+damage = 5
+cost = 3
+compatible_subclasses = Array[String](["All"])
