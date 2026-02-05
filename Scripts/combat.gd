@@ -1,23 +1,36 @@
 extends Node2D
-
-@onready var spook := get_node('Spook')
 @onready var tilemap_node := $Grid
 @onready var hover_grid : HoverGrid = $HoverGrid
 @onready var obstacles_tilemap := $"Grid/Obstacles"
 @onready var move_button := $MoveButton
+@export var unit_scene: PackedScene = load("res://Scenes/unit.tscn")
 
-@onready var current_unit = spook #This needs to update to be dyamic to 'current unit' based on turns
+var player_units: Array = []
+var current_unit
 
 var action = ''
 
 func _ready() -> void:
 	# For multiple units, use unit position (0/1,0/1 stored on unit stats storage)
-	var start_square = Vector2(GameConfig.grid_width - 1, GameConfig.grid_height - 1)
-	move_to(current_unit, start_square, 0)
+	var start_square = Vector2i(GameConfig.grid_width - 1, GameConfig.grid_height - 1)
+	var units = SaveManager.data.units
+	
+	for unit in units:
+		var new_unit := unit_scene.instantiate() as Unit
+		new_unit.data = unit
+		
+		player_units.append(new_unit)
+		add_child(new_unit)
+		
+		var new_unit_start = start_square - new_unit.data.start_position
+		move_to(new_unit, new_unit_start, 0)
+	
+	current_unit = player_units[0]
+	TurnManager.start_battle(player_units)
 	hover_grid.clicked.connect(_on_grid_clicked)
 
 func _process(delta: float) -> void:
-	draw_traversable_path(spook, 3)
+	draw_traversable_path(current_unit, 3)
 
 func draw_traversable_path(unit, distance):
 	if action == 'movement':
@@ -50,7 +63,7 @@ func _on_grid_clicked(visual_cell: Vector2i):
 	if visual_cell == Vector2i(-1, -1):
 		return
 	if action == 'movement':
-		move_to(current_unit, visual_cell, 1.1, SaveManager.data.units[0].speed)
+		move_to(current_unit, visual_cell, 1.1, SaveManager.data.current_unit.speed)
 
 # Moves a unit along a path of Vector2i tiles using Tweens
 func tween_along_path(unit: Node2D, path: Array, speed: float, distance_cap: int, overlap: float = -0.5):

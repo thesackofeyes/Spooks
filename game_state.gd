@@ -5,4 +5,5 @@ class_name GameData
 
 @export var game_progress: int = 1
 
+@export var current_unit: UnitData
 @export var units: Array[UnitData] = []

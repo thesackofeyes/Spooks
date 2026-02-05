@@ -21,6 +21,8 @@ GameConfig="*uid://dfmwjdipse2w6"
 SaveManager="*uid://bi3fc315wpui0"
 Utils="*uid://1uvygxrfw4k7"
 Pathfinding="*uid://c4s6to4yxrv3k"
+UnitLibrary="*uid://c3evrlrdpwmiq"
+TurnManager="*uid://dk7hh5mmvfmwr"
 
 [physics]
 

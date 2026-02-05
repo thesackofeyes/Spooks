@@ -1,13 +1,10 @@
 [gd_scene format=3 uid="uid://chl8qhvvlnr2v"]
 
 [ext_resource type="Script" uid="uid://bqe6lh5ciky1i" path="res://Scripts/spook.gd" id="1_j3fvo"]
-[ext_resource type="Texture2D" uid="uid://bve0iup3cd5n7" path="res://Assets/Characters/Fire_Warrior/Fire_WarriorNoEffect-Sheet.png" id="1_tqxdl"]
 
-[node name="Spook" type="Node2D" unique_id=687606312]
+[node name="Unit" type="Node2D" unique_id=687606312]
 script = ExtResource("1_j3fvo")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1236342330]
-texture = ExtResource("1_tqxdl")
+scale = Vector2(0.6, 0.6)
 offset = Vector2(5, -20)
-hframes = 19
-vframes = 5

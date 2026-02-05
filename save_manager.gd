@@ -3,10 +3,9 @@ extends Node
 const SAVE_PATH := "res://Assets/savegame.tres"
 
 var data: GameData
-var rng := RandomNumberGenerator.new()
 
 func _ready():
-	rng.randomize()
+	var unit_scene = load("res://Scenes/unit.tscn")
 	load_game()
 
 func load_game():
@@ -22,23 +21,12 @@ func save_game():
 
 func _init_default_data():
 	create_unit("Spook", "Apprentice")
+	create_unit("Witch", "Malevolant")
+	
+	data.current_unit = data.units[0]
 	save_game()
 
-func create_unit(unit_class: String, unit_subclass: String = "") -> UnitData:
-	var template := UnitData.new()
-	template.unit_class = unit_class
-	template.unit_subclass = unit_subclass
-
-	var unit := template.duplicate()
-	unit.id = _generate_unit_id()
+func create_unit(unit_class: String, unit_subclass: String = ""):
+	var unit_data := UnitLibrary.create_unit(unit_class, unit_subclass)
 	
-	var teleport = load("res://Abilities/teleport.tres")
-	var widdershins_strike = load("res://Abilities/widdershins_strike.tres")
-	unit.abilities.append(teleport)
-	unit.abilities.append(widdershins_strike)
-	
-	data.units.append(unit)
-	return unit
-
-func _generate_unit_id() -> String:
-	return "unit_" + str(rng.randi()) + "_" + str(rng.randi())
+	data.units.append(unit_data)

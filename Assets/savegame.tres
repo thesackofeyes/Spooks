@@ -1,18 +1,35 @@
 [gd_resource type="Resource" script_class="GameData" format=3]
 
-[ext_resource type="Script" path="res://game_state.gd" id="1_fop8n"]
-[ext_resource type="Script" path="res://Scripts/unit_data.gd" id="2_f2rtb"]
-[ext_resource type="Script" path="res://Scripts/ability.gd" id="3_5gfxt"]
-[ext_resource type="Resource" path="res://Abilities/teleport.tres" id="4_ov0du"]
-[ext_resource type="Resource" path="res://Abilities/widdershins_strike.tres" id="5_bp00r"]
+[ext_resource type="Script" path="res://Scripts/ability.gd" id="1_5gfxt"]
+[ext_resource type="Resource" path="res://Abilities/teleport.tres" id="2_ov0du"]
+[ext_resource type="Resource" path="res://Abilities/widdershins_strike.tres" id="3_bp00r"]
+[ext_resource type="Script" path="res://Scripts/unit_data.gd" id="4_5ie8h"]
+[ext_resource type="Texture2D" path="res://Assets/Characters/Monk/Idle.png" id="5_gkk6g"]
+[ext_resource type="Script" path="res://game_state.gd" id="6_eh4qd"]
+[ext_resource type="Texture2D" path="res://Assets/Characters/Warrior/Warrior_Idle.png" id="7_qlshv"]
 
-[sub_resource type="Resource" id="Resource_5ie8h"]
-script = ExtResource("2_f2rtb")
-id = "unit_2084933970_308163575"
+[sub_resource type="Resource" id="Resource_ta8ws"]
+script = ExtResource("4_5ie8h")
+sprite = ExtResource("5_gkk6g")
+sprite_h_frames = 6
+sprite_v_frames = 1
+start_position = Vector2i(1, 1)
 unit_class = "Spook"
 unit_subclass = "Apprentice"
-abilities = Array[ExtResource("3_5gfxt")]([ExtResource("4_ov0du"), ExtResource("5_bp00r")])
+abilities = Array[ExtResource("1_5gfxt")]([ExtResource("2_ov0du"), ExtResource("3_bp00r")])
+metadata/_custom_type_script = "uid://ckohomhh5krns"
+
+[sub_resource type="Resource" id="Resource_4w2nr"]
+script = ExtResource("4_5ie8h")
+sprite = ExtResource("7_qlshv")
+sprite_h_frames = 8
+start_position = Vector2i(1, 0)
+unit_class = "Witch"
+unit_subclass = "Malevolant"
+abilities = Array[ExtResource("1_5gfxt")]([ExtResource("2_ov0du")])
+metadata/_custom_type_script = "uid://ckohomhh5krns"
 
 [resource]
-script = ExtResource("1_fop8n")
-units = Array[ExtResource("2_f2rtb")]([SubResource("Resource_5ie8h")])
+script = ExtResource("6_eh4qd")
+current_unit = SubResource("Resource_ta8ws")
+units = Array[ExtResource("4_5ie8h")]([SubResource("Resource_ta8ws"), SubResource("Resource_4w2nr")])

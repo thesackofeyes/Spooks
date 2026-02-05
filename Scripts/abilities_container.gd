@@ -2,7 +2,7 @@ extends Node2D
 
 @onready var ability_container = $VBoxContainer
 @onready var ability_button_scene: PackedScene = preload("res://Scenes/ability_button.tscn")
-@onready var abilities = SaveManager.data.units[0].abilities
+@onready var abilities = SaveManager.data.current_unit.abilities
 
 func _ready() -> void:
 	if abilities.size() > 0:

@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="UnitData" format=3 uid="uid://coc3idiv00tek"]
+
+[ext_resource type="Script" uid="uid://bp34lrn2n88r5" path="res://Scripts/ability.gd" id="1_t6ogp"]
+[ext_resource type="Script" uid="uid://ckohomhh5krns" path="res://Scripts/unit_data.gd" id="2_tuka3"]
+[ext_resource type="Resource" uid="uid://b7s42xbh8d7y2" path="res://Abilities/teleport.tres" id="2_uuy8a"]
+[ext_resource type="Resource" uid="uid://vyqwxu8evpb0" path="res://Abilities/widdershins_strike.tres" id="3_uuy8a"]
+[ext_resource type="Texture2D" uid="uid://c05rxh7mw0jtg" path="res://Assets/Characters/Monk/Idle.png" id="5_3vlrm"]
+
+[resource]
+script = ExtResource("2_tuka3")
+sprite = ExtResource("5_3vlrm")
+sprite_h_frames = 6
+sprite_v_frames = 1
+start_position = Vector2i(1, 1)
+unit_class = "Spook"
+unit_subclass = "Apprentice"
+abilities = Array[ExtResource("1_t6ogp")]([ExtResource("2_uuy8a"), ExtResource("3_uuy8a")])
+metadata/_custom_type_script = "uid://ckohomhh5krns"
