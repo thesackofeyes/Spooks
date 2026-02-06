@@ -1,0 +1,49 @@
+[gd_scene format=3 uid="uid://kkglf85yx8ua"]
+
+[ext_resource type="Theme" uid="uid://dslmgwoqlssvo" path="res://Assets/UI/buttons_theme.tres" id="1_6c1hy"]
+[ext_resource type="Texture2D" uid="uid://hlcnx13l3gp6" path="res://Assets/UI/Button Background 128x32.png" id="1_t7hlu"]
+[ext_resource type="LabelSettings" uid="uid://bd2b8umd3utg7" path="res://Assets/UI/button_labels.tres" id="2_6c1hy"]
+[ext_resource type="Script" uid="uid://bmkohansl7jng" path="res://Scripts/end_turn_button.gd" id="2_stvv0"]
+
+[node name="EndTurn" type="Button" unique_id=1480502057]
+custom_minimum_size = Vector2(128, 32)
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -64.0
+offset_top = -16.0
+offset_right = 64.0
+offset_bottom = 16.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_default_cursor_shape = 2
+theme = ExtResource("1_6c1hy")
+icon_alignment = 1
+expand_icon = true
+script = ExtResource("2_stvv0")
+
+[node name="ButtonIcon" type="Sprite2D" parent="." unique_id=838505258]
+texture_filter = 3
+position = Vector2(62, 52)
+scale = Vector2(2.25, 2.25)
+hframes = 8
+vframes = 8
+frame = 12
+
+[node name="ButtonBackground" type="Sprite2D" parent="." unique_id=1005323937]
+z_index = -1
+texture_filter = 5
+position = Vector2(64, 16)
+texture = ExtResource("1_t7hlu")
+
+[node name="Label" type="Label" parent="." unique_id=47644756]
+layout_mode = 0
+offset_right = 128.0
+offset_bottom = 32.0
+mouse_default_cursor_shape = 2
+text = "End Turn"
+label_settings = ExtResource("2_6c1hy")
+horizontal_alignment = 1
+vertical_alignment = 1

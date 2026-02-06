@@ -94,3 +94,7 @@ func _on_button_toggled(toggled_on: bool, source: BaseButton, extra_arg_0: Strin
 		action = extra_arg_0
 	else:
 		action = ''
+
+
+func _on_end_turn_pressed(extra_arg_0: String) -> void:
+	TurnManager.end_turn()

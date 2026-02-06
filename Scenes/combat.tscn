@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://od74nstxu6e0" path="res://Scenes/button.tscn" id="6_yt1oa"]
 [ext_resource type="Texture2D" uid="uid://b2n3w6887iibc" path="res://Assets/Icons/boots.png" id="7_3w34b"]
 [ext_resource type="Texture2D" uid="uid://02n5p3mhbd40" path="res://Assets/Icons/gloves.png" id="8_avwh6"]
+[ext_resource type="PackedScene" uid="uid://kkglf85yx8ua" path="res://Scenes/end_turn_button.tscn" id="8_d53gg"]
 [ext_resource type="PackedScene" uid="uid://djwvfl76tt23i" path="res://Scenes/abilities_container.tscn" id="9_d53gg"]
 
 [node name="Combat" type="Node2D" unique_id=1284863964]
@@ -23,6 +24,12 @@ tile_set = ExtResource("1_4ln8h")
 
 [node name="HoverGrid" type="Node2D" parent="." unique_id=869890431]
 script = ExtResource("3_ut0kg")
+
+[node name="EndTurn" parent="." unique_id=1480502057 instance=ExtResource("8_d53gg")]
+offset_left = -446.0
+offset_top = -146.0
+offset_right = -318.0
+offset_bottom = -114.0
 
 [node name="MoveButton" parent="." unique_id=260208266 instance=ExtResource("6_yt1oa")]
 offset_left = -560.0
@@ -50,4 +57,5 @@ label_text = "Attack"
 [node name="Abilities" parent="." unique_id=1525293950 instance=ExtResource("9_d53gg")]
 position = Vector2(-560, -92)
 
+[connection signal="pressed" from="EndTurn" to="." method="_on_end_turn_pressed" binds= ["EndTurn"]]
 [connection signal="toggled" from="MoveButton" to="." method="_on_button_toggled" flags=18 binds= ["movement"]]

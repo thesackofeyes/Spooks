@@ -13,7 +13,6 @@ func start_battle(unit_list: Array) -> void:
 		unit.change_state("Waiting")
 
 	units.sort_custom(_sort_by_initiative)
-
 	start_turn()
 
 func _sort_by_initiative(a, b):

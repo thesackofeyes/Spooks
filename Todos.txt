@@ -1,6 +1,5 @@
 
 Create turn order/initiative system
-	- End turn button (Currently mapped to enter key)
 	- Update movement/mouse hover functions to be based on the current units turn in the state machine
 
 

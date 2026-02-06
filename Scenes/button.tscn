@@ -1,13 +1,9 @@
 [gd_scene format=3 uid="uid://od74nstxu6e0"]
 
 [ext_resource type="Texture2D" uid="uid://fvkn66t3xppf" path="res://Assets/UI/Button Background.png" id="1_1cmwl"]
+[ext_resource type="Theme" uid="uid://dslmgwoqlssvo" path="res://Assets/UI/buttons_theme.tres" id="1_edukx"]
 [ext_resource type="Script" uid="uid://d044t0ddu6eep" path="res://Scripts/button.gd" id="1_iju5o"]
 [ext_resource type="LabelSettings" uid="uid://bd2b8umd3utg7" path="res://Assets/UI/button_labels.tres" id="3_smycg"]
-
-[sub_resource type="Theme" id="Theme_smycg"]
-Button/colors/icon_hover_pressed_color = Color(0, 0, 0, 0.52156866)
-Button/colors/icon_normal_color = Color(1, 1, 1, 0)
-Button/colors/icon_pressed_color = Color(0, 0, 0, 0.49019608)
 
 [node name="Button" type="Button" unique_id=2016880670]
 custom_minimum_size = Vector2(128, 128)
@@ -24,7 +20,7 @@ grow_horizontal = 2
 grow_vertical = 2
 scale = Vector2(0.75, 0.75)
 mouse_default_cursor_shape = 2
-theme = SubResource("Theme_smycg")
+theme = ExtResource("1_edukx")
 toggle_mode = true
 icon_alignment = 1
 expand_icon = true

@@ -2,7 +2,9 @@ extends Button
 
 @onready var sprite = $ButtonIcon
 @onready var label = $Label
+@onready var background = $ButtonBackground
 
+@export var background_texture: Texture = null
 @export var icon_sheet: Texture = null
 
 @export var hframes: int = 0
@@ -21,4 +23,6 @@ func _ready() -> void:
 	
 	if label_text != "" and label != null:
 		label.text = label_text
-		
+	
+	if background_texture != null:
+		background.texture = background_texture

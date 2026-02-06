@@ -13,7 +13,6 @@ func update(unit: Node, delta: float) -> void:
 		print ("ACTION")
 		action_completed = true
 		unit.change_state("Waiting")  # after acting
-		TurnManager.end_turn()
 
 func exit(unit: Node) -> void:
 	print("%s finished acting" % unit.name)
