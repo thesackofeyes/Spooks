@@ -2,9 +2,15 @@ extends Node2D
 
 @onready var ability_container = $VBoxContainer
 @onready var ability_button_scene: PackedScene = preload("res://Scenes/ability_button.tscn")
-@onready var abilities = SaveManager.data.current_unit.abilities
 
 func _ready() -> void:
+	pass
+
+func update_abilites(abilities):
+	# Clear existing ability buttons
+	for child in ability_container.get_children():
+		child.queue_free()
+
 	if abilities.size() > 0:
 		for i in range(abilities.size()):
 			var ability_button := ability_button_scene.instantiate() as AbilityButton

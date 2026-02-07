@@ -1,0 +1,92 @@
+[gd_scene format=3 uid="uid://cbb4nph226owm"]
+
+[ext_resource type="Texture2D" uid="uid://des8ncbmdfqq7" path="res://Assets/Characters/character portraits.png" id="1_26lmt"]
+[ext_resource type="Texture2D" uid="uid://cfac0nc8jgsoj" path="res://Assets/UI/Button Background portrait.png" id="1_o2dp4"]
+[ext_resource type="Script" uid="uid://dn311g6338fcu" path="res://Scripts/character_portrait.gd" id="1_q5gsi"]
+[ext_resource type="Texture2D" uid="uid://dgymch6l1fn18" path="res://Assets/UI/generic_circle.png" id="2_xd3xv"]
+[ext_resource type="LabelSettings" uid="uid://bd2b8umd3utg7" path="res://Assets/UI/button_labels.tres" id="3_7jbx7"]
+
+[node name="CharacterPortrait" type="Control" unique_id=206632960]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -1024.0
+offset_bottom = -488.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_q5gsi")
+
+[node name="PortraitBackground" type="Sprite2D" parent="." unique_id=1347510556]
+texture = ExtResource("1_o2dp4")
+centered = false
+
+[node name="HP" type="Control" parent="." unique_id=655516656]
+anchors_preset = 0
+offset_left = 13.0
+offset_top = 115.0
+offset_right = 45.0
+offset_bottom = 147.0
+
+[node name="Sprite" type="Sprite2D" parent="HP" unique_id=9080931]
+texture = ExtResource("2_xd3xv")
+centered = false
+
+[node name="Label" type="Label" parent="HP" unique_id=1976553955]
+layout_mode = 0
+offset_right = 32.0
+offset_bottom = 32.0
+text = "12"
+label_settings = ExtResource("3_7jbx7")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="AP" type="Control" parent="." unique_id=1502377368]
+anchors_preset = 0
+offset_left = 48.0
+offset_top = 115.0
+offset_right = 80.0
+offset_bottom = 147.0
+
+[node name="Sprite" type="Sprite2D" parent="AP" unique_id=1429168399]
+texture = ExtResource("2_xd3xv")
+centered = false
+
+[node name="Label" type="Label" parent="AP" unique_id=1418558828]
+layout_mode = 0
+offset_left = 1.0
+offset_right = 33.0
+offset_bottom = 32.0
+text = "5"
+label_settings = ExtResource("3_7jbx7")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Moves" type="Control" parent="." unique_id=1815849541]
+anchors_preset = 0
+offset_left = 83.0
+offset_top = 115.0
+offset_right = 115.0
+offset_bottom = 147.0
+
+[node name="Sprite" type="Sprite2D" parent="Moves" unique_id=529950287]
+texture = ExtResource("2_xd3xv")
+centered = false
+
+[node name="Label" type="Label" parent="Moves" unique_id=1026796756]
+layout_mode = 0
+offset_left = 1.0
+offset_right = 33.0
+offset_bottom = 32.0
+text = "4"
+label_settings = ExtResource("3_7jbx7")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Portrait" type="Sprite2D" parent="." unique_id=783954961]
+position = Vector2(11.000001, 12.000001)
+scale = Vector2(0.4, 0.4)
+texture = ExtResource("1_26lmt")
+centered = false
+hframes = 8
+vframes = 8

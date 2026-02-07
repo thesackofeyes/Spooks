@@ -8,6 +8,7 @@
 [ext_resource type="Texture2D" uid="uid://02n5p3mhbd40" path="res://Assets/Icons/gloves.png" id="8_avwh6"]
 [ext_resource type="PackedScene" uid="uid://kkglf85yx8ua" path="res://Scenes/end_turn_button.tscn" id="8_d53gg"]
 [ext_resource type="PackedScene" uid="uid://djwvfl76tt23i" path="res://Scenes/abilities_container.tscn" id="9_d53gg"]
+[ext_resource type="PackedScene" uid="uid://cbb4nph226owm" path="res://Scenes/character_portrait.tscn" id="9_twsak"]
 
 [node name="Combat" type="Node2D" unique_id=1284863964]
 script = ExtResource("1_ut0kg")
@@ -56,6 +57,12 @@ label_text = "Attack"
 
 [node name="Abilities" parent="." unique_id=1525293950 instance=ExtResource("9_d53gg")]
 position = Vector2(-560, -92)
+
+[node name="CharacterPortrait" parent="." unique_id=206632960 instance=ExtResource("9_twsak")]
+offset_left = -447.0
+offset_top = -311.0
+offset_right = -447.0
+offset_bottom = -311.0
 
 [connection signal="pressed" from="EndTurn" to="." method="_on_end_turn_pressed" binds= ["EndTurn"]]
 [connection signal="toggled" from="MoveButton" to="." method="_on_button_toggled" flags=18 binds= ["movement"]]
