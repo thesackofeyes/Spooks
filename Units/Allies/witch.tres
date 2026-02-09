@@ -3,14 +3,19 @@
 [ext_resource type="Script" uid="uid://bp34lrn2n88r5" path="res://Scripts/ability.gd" id="1_b8cdl"]
 [ext_resource type="Resource" uid="uid://b7s42xbh8d7y2" path="res://Abilities/teleport.tres" id="2_mqq6q"]
 [ext_resource type="Script" uid="uid://ckohomhh5krns" path="res://Scripts/unit_data.gd" id="2_s0v7f"]
-[ext_resource type="Texture2D" uid="uid://cmtuhyne6pkj" path="res://Assets/Characters/Warrior/Warrior_Idle.png" id="4_acsd3"]
+[ext_resource type="Texture2D" uid="uid://d0pqkicy086yj" path="res://Assets/Characters/witch.png" id="4_rgpwr"]
 
 [resource]
 script = ExtResource("2_s0v7f")
-sprite = ExtResource("4_acsd3")
-sprite_h_frames = 8
+sprite = ExtResource("4_rgpwr")
+sprite_scale = 0.07
+hero_sprite_x = 1
 start_position = Vector2i(1, 0)
 unit_class = "Witch"
 unit_subclass = "Malevolant"
+base_hp = 8
+speed = 6
+stamina = 8
+base_attack_range = 5
 abilities = Array[ExtResource("1_b8cdl")]([ExtResource("2_mqq6q")])
 metadata/_custom_type_script = "uid://ckohomhh5krns"

@@ -6,7 +6,7 @@ extends Node
 # -----------------------------
 
 # Main function
-func astar_find_path(tilemap: TileMapLayer, obstacle_tilemap: TileMapLayer, start: Vector2i, goal: Vector2i) -> Array[Vector2i]:
+func astar_find_path(tilemap: TileMapLayer, obstacle_tilemap: TileMapLayer, start: Vector2i, goal: Vector2i, units: Array) -> Array[Vector2i]:
 	start = Utils.tilemap_local_to_cell(tilemap, start)
 	goal = Utils.tilemap_local_to_cell(tilemap, Utils.cell_to_local(goal))
 	
@@ -49,6 +49,16 @@ func astar_find_path(tilemap: TileMapLayer, obstacle_tilemap: TileMapLayer, star
 				continue
 			# skip blocked neighbors
 			if obstacle_tilemap.get_cell_tile_data(neighbor) != null:
+				continue
+			
+			# for each unit, calculate position (tilemap_local_to_cell)
+			var unit_in_neighbor = false
+			for unit in units:
+				var unit_cell = Utils.tilemap_local_to_cell(tilemap, unit.position)
+				if unit_cell == neighbor:
+					unit_in_neighbor = true
+			
+			if unit_in_neighbor == true:
 				continue
 
 			var tentative_g: float = g_score.get(current, INF) + 1

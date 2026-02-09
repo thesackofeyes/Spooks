@@ -1,13 +1,13 @@
 extends Control
 
 func _ready() -> void:
-	update_stats()
-
-func update_stats():
 	pass
-	#update_hp(10)
-	#update_ap(3)
-	#update_moves(1)
+
+func update_portrait(hp, ap, moves, image_frames: Vector2i):
+	update_hp(hp)
+	update_ap(ap)
+	update_moves(moves)
+	update_hero_image(image_frames)
 
 func update_hp(hp):
 	# Update HP Count (Currently static, implement with attacking)
@@ -19,3 +19,8 @@ func update_ap(ap):
 	
 func update_moves(moves):
 	$Moves/Label.text = str(moves)
+
+func update_hero_image(image_frames: Vector2i):
+	var hframes = $Portrait.hframes
+	$Portrait.frame = image_frames.y * hframes + image_frames.x
+	

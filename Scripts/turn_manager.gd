@@ -26,7 +26,6 @@ func start_turn() -> void:
 		return
 	current_unit = units[current_index]
 	current_unit.start_turn()  # sets state to Idle
-	print("It's %s's turn!" % current_unit.name)
 
 func end_turn() -> void:
 	if units.is_empty():

@@ -1,8 +1,9 @@
 extends Node
 
 const UNIT_LIBRARY := {
-	"Spook:Apprentice": preload("res://Units/spook.tres"),
-	"Witch:Malevolant": preload("res://Units/witch.tres")
+	"Spook:Apprentice": preload("res://Units/Allies/spook.tres"),
+	"Witch:Malevolant": preload("res://Units/Allies/witch.tres"),
+	"Ghost:Small": preload("res://Units/Enemies/ghost.tres")
 }
 
 func create_unit(unit_class: String, unit_subclass: String = "") -> UnitData:

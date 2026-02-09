@@ -26,3 +26,5 @@ func _ready() -> void:
 	
 	if background_texture != null:
 		background.texture = background_texture
+		
+	

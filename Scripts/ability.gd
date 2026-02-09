@@ -6,7 +6,7 @@ class_name Ability
 @export var icon_y: int = 0
 @export_multiline var description: String = ""
 
-@export var range: int = 1
+@export var ability_range: int = 1
 @export var damage: int = 0
 @export var movement_speed: int = 0
 @export var cost: int = 0

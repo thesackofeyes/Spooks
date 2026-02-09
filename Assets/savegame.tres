@@ -1,36 +1,50 @@
-[gd_resource type="Resource" script_class="GameData" format=3 uid="uid://t2iwpwn5edsi"]
+[gd_resource type="Resource" script_class="GameData" format=3]
 
-[ext_resource type="Script" uid="uid://bp34lrn2n88r5" path="res://Scripts/ability.gd" id="1_5gfxt"]
-[ext_resource type="Resource" uid="uid://b7s42xbh8d7y2" path="res://Abilities/teleport.tres" id="2_ov0du"]
-[ext_resource type="Resource" uid="uid://vyqwxu8evpb0" path="res://Abilities/widdershins_strike.tres" id="3_bp00r"]
-[ext_resource type="Script" uid="uid://ckohomhh5krns" path="res://Scripts/unit_data.gd" id="4_5ie8h"]
-[ext_resource type="Texture2D" uid="uid://c05rxh7mw0jtg" path="res://Assets/Characters/Monk/Idle.png" id="5_gkk6g"]
-[ext_resource type="Script" uid="uid://b1vcbwbbfwpf7" path="res://game_state.gd" id="6_eh4qd"]
-[ext_resource type="Texture2D" uid="uid://cmtuhyne6pkj" path="res://Assets/Characters/Warrior/Warrior_Idle.png" id="7_qlshv"]
+[ext_resource type="Script" path="res://Scripts/ability.gd" id="1_ov0du"]
+[ext_resource type="Resource" path="res://Abilities/teleport.tres" id="2_bp00r"]
+[ext_resource type="Resource" path="res://Abilities/widdershins_strike.tres" id="3_5ie8h"]
+[ext_resource type="Script" path="res://Scripts/unit_data.gd" id="4_gkk6g"]
+[ext_resource type="Texture2D" path="res://Assets/Characters/spook.png" id="5_eh4qd"]
+[ext_resource type="Script" path="res://game_state.gd" id="6_qlshv"]
+[ext_resource type="Texture2D" path="res://Assets/Characters/witch.png" id="7_ta8ws"]
+[ext_resource type="Texture2D" path="res://Assets/Characters/ghost.png" id="8_4w2nr"]
 
-[sub_resource type="Resource" id="Resource_ta8ws"]
-script = ExtResource("4_5ie8h")
-sprite = ExtResource("5_gkk6g")
-sprite_h_frames = 6
-sprite_v_frames = 1
+[sub_resource type="Resource" id="Resource_80owm"]
+script = ExtResource("4_gkk6g")
+sprite = ExtResource("5_eh4qd")
+sprite_scale = 0.07
 start_position = Vector2i(1, 1)
 unit_class = "Spook"
 unit_subclass = "Apprentice"
-abilities = Array[ExtResource("1_5gfxt")]([ExtResource("2_ov0du"), ExtResource("3_bp00r")])
+abilities = Array[ExtResource("1_ov0du")]([ExtResource("2_bp00r"), ExtResource("3_5ie8h")])
 metadata/_custom_type_script = "uid://ckohomhh5krns"
 
-[sub_resource type="Resource" id="Resource_4w2nr"]
-script = ExtResource("4_5ie8h")
-sprite = ExtResource("7_qlshv")
-sprite_h_frames = 8
+[sub_resource type="Resource" id="Resource_1onu3"]
+script = ExtResource("4_gkk6g")
+sprite = ExtResource("7_ta8ws")
+sprite_scale = 0.07
+hero_sprite_x = 1
 start_position = Vector2i(1, 0)
 unit_class = "Witch"
 unit_subclass = "Malevolant"
-stamina = 9
-abilities = Array[ExtResource("1_5gfxt")]([ExtResource("2_ov0du")])
+base_hp = 8
+speed = 6
+stamina = 8
+base_attack_range = 5
+abilities = Array[ExtResource("1_ov0du")]([ExtResource("2_bp00r")])
+metadata/_custom_type_script = "uid://ckohomhh5krns"
+
+[sub_resource type="Resource" id="Resource_ti7fr"]
+script = ExtResource("4_gkk6g")
+sprite = ExtResource("8_4w2nr")
+sprite_scale = 0.4
+start_position = Vector2i(6, 6)
+unit_class = "Ghost"
+unit_subclass = "Small"
+player_unit = false
 metadata/_custom_type_script = "uid://ckohomhh5krns"
 
 [resource]
-script = ExtResource("6_eh4qd")
-current_unit = SubResource("Resource_ta8ws")
-units = Array[ExtResource("4_5ie8h")]([SubResource("Resource_ta8ws"), SubResource("Resource_4w2nr")])
+script = ExtResource("6_qlshv")
+current_unit = SubResource("Resource_80owm")
+units = Array[ExtResource("4_gkk6g")]([SubResource("Resource_80owm"), SubResource("Resource_1onu3"), SubResource("Resource_ti7fr")])

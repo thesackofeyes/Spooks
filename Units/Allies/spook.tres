@@ -4,13 +4,12 @@
 [ext_resource type="Script" uid="uid://ckohomhh5krns" path="res://Scripts/unit_data.gd" id="2_tuka3"]
 [ext_resource type="Resource" uid="uid://b7s42xbh8d7y2" path="res://Abilities/teleport.tres" id="2_uuy8a"]
 [ext_resource type="Resource" uid="uid://vyqwxu8evpb0" path="res://Abilities/widdershins_strike.tres" id="3_uuy8a"]
-[ext_resource type="Texture2D" uid="uid://c05rxh7mw0jtg" path="res://Assets/Characters/Monk/Idle.png" id="5_3vlrm"]
+[ext_resource type="Texture2D" uid="uid://cf5q5x0fc1byy" path="res://Assets/Characters/spook.png" id="5_md4tb"]
 
 [resource]
 script = ExtResource("2_tuka3")
-sprite = ExtResource("5_3vlrm")
-sprite_h_frames = 6
-sprite_v_frames = 1
+sprite = ExtResource("5_md4tb")
+sprite_scale = 0.07
 start_position = Vector2i(1, 1)
 unit_class = "Spook"
 unit_subclass = "Apprentice"

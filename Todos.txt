@@ -1,26 +1,18 @@
-Turns
-	- Limit Attack to once per turn
 
-UI
-	- Add Hero Portrait (Currently selected unit)
-		- Add to unit_data
-		- Fix update function to work with unit_data
-	- Health UI Update (Retain value across turns)
-	- Combine above updates into parent function
+Turns
+	- Update AP Counter + disable ability buttons if current_ap < ability_cost
 
 Abilities
-	- Update ability button to include casting cost
-	- Update ability button to include hover tooltip
-		- Name, Description, Cost, Range
+	- Cast Abilities
+		- Teleport
+		- Salt and Iron
 
 Units
 	Enemies
-		- Create Enemy Unit Scene
-		- Create Enemy Unit Data Structure
+		- Update character Portrait
+			- Show currenly acting enemy unit (Modulate background?)
 		- Create Enemy Info on Hover
-	
-	Allies
-		- Implement Unit Health Tracking
-		- Implement basic attack
-			- Melee (Spook)
-			- Ranged (Witch)
+			- Name
+			- Portrait
+			- HP
+			- Flavour Text

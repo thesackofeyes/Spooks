@@ -64,5 +64,17 @@ offset_top = -311.0
 offset_right = -447.0
 offset_bottom = -311.0
 
-[connection signal="pressed" from="EndTurn" to="." method="_on_end_turn_pressed" binds= ["EndTurn"]]
-[connection signal="toggled" from="MoveButton" to="." method="_on_button_toggled" flags=18 binds= ["movement"]]
+[node name="Units" type="Control" parent="." unique_id=100189783]
+y_sort_enabled = true
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[connection signal="pressed" from="EndTurn" to="." method="_on_end_turn_pressed"]
+[connection signal="mouse_entered" from="MoveButton" to="." method="_on_move_button_mouse_entered"]
+[connection signal="mouse_exited" from="MoveButton" to="." method="_on_move_button_mouse_exited"]
+[connection signal="toggled" from="MoveButton" to="." method="_on_move_button_toggled" flags=18]
+[connection signal="mouse_entered" from="AttackButton" to="." method="_on_attack_button_mouse_entered"]
+[connection signal="mouse_exited" from="AttackButton" to="." method="_on_attack_button_mouse_exited"]
+[connection signal="toggled" from="AttackButton" to="." method="_on_attack_button_toggled"]

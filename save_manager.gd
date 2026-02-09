@@ -22,6 +22,7 @@ func save_game():
 func _init_default_data():
 	create_unit("Spook", "Apprentice")
 	create_unit("Witch", "Malevolant")
+	create_unit("Ghost", "Small")
 	
 	data.current_unit = data.units[0]
 	save_game()

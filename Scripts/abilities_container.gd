@@ -14,7 +14,7 @@ func update_abilites(abilities):
 	if abilities.size() > 0:
 		for i in range(abilities.size()):
 			var ability_button := ability_button_scene.instantiate() as AbilityButton
-			
+			ability_button.data = abilities[i]
 			var label = ability_button.get_node('Name')
 			var icon = ability_button.get_node('ButtonIcon')
 			label.text = abilities[i].name

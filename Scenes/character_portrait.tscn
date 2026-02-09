@@ -3,8 +3,10 @@
 [ext_resource type="Texture2D" uid="uid://des8ncbmdfqq7" path="res://Assets/Characters/character portraits.png" id="1_26lmt"]
 [ext_resource type="Texture2D" uid="uid://cfac0nc8jgsoj" path="res://Assets/UI/Button Background portrait.png" id="1_o2dp4"]
 [ext_resource type="Script" uid="uid://dn311g6338fcu" path="res://Scripts/character_portrait.gd" id="1_q5gsi"]
-[ext_resource type="Texture2D" uid="uid://dgymch6l1fn18" path="res://Assets/UI/generic_circle.png" id="2_xd3xv"]
+[ext_resource type="Texture2D" uid="uid://b2ud3b7h0x62j" path="res://Assets/Icons/heart.png" id="3_3hcpp"]
 [ext_resource type="LabelSettings" uid="uid://bd2b8umd3utg7" path="res://Assets/UI/button_labels.tres" id="3_7jbx7"]
+[ext_resource type="Texture2D" uid="uid://dnmw04cs8kosy" path="res://Assets/Icons/ap.png" id="5_lmy7u"]
+[ext_resource type="Texture2D" uid="uid://70yjg4e3043" path="res://Assets/Icons/boot.png" id="6_lmy7u"]
 
 [node name="CharacterPortrait" type="Control" unique_id=206632960]
 layout_mode = 3
@@ -29,7 +31,8 @@ offset_right = 45.0
 offset_bottom = 147.0
 
 [node name="Sprite" type="Sprite2D" parent="HP" unique_id=9080931]
-texture = ExtResource("2_xd3xv")
+texture_filter = 5
+texture = ExtResource("3_3hcpp")
 centered = false
 
 [node name="Label" type="Label" parent="HP" unique_id=1976553955]
@@ -49,7 +52,10 @@ offset_right = 80.0
 offset_bottom = 147.0
 
 [node name="Sprite" type="Sprite2D" parent="AP" unique_id=1429168399]
-texture = ExtResource("2_xd3xv")
+texture_filter = 5
+position = Vector2(3, 3)
+scale = Vector2(0.85, 0.85)
+texture = ExtResource("5_lmy7u")
 centered = false
 
 [node name="Label" type="Label" parent="AP" unique_id=1418558828]
@@ -70,12 +76,13 @@ offset_right = 115.0
 offset_bottom = 147.0
 
 [node name="Sprite" type="Sprite2D" parent="Moves" unique_id=529950287]
-texture = ExtResource("2_xd3xv")
+texture_filter = 5
+texture = ExtResource("6_lmy7u")
 centered = false
 
 [node name="Label" type="Label" parent="Moves" unique_id=1026796756]
 layout_mode = 0
-offset_left = 1.0
+offset_left = 10.0
 offset_right = 33.0
 offset_bottom = 32.0
 text = "4"

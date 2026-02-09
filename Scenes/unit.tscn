@@ -3,8 +3,9 @@
 [ext_resource type="Script" uid="uid://bqe6lh5ciky1i" path="res://Scripts/spook.gd" id="1_j3fvo"]
 
 [node name="Unit" type="Node2D" unique_id=687606312]
+y_sort_enabled = true
 script = ExtResource("1_j3fvo")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1236342330]
+position = Vector2(0, -25)
 scale = Vector2(0.6, 0.6)
-offset = Vector2(5, -20)

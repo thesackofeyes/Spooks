@@ -23,6 +23,7 @@ Utils="*uid://1uvygxrfw4k7"
 Pathfinding="*uid://c4s6to4yxrv3k"
 UnitLibrary="*uid://c3evrlrdpwmiq"
 TurnManager="*uid://dk7hh5mmvfmwr"
+TooltipManager="*uid://ckcupe5rcbws0"
 
 [physics]
 
