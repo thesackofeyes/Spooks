@@ -9,3 +9,6 @@
 
 # Mono / C#
 .mono/
+
+# Visual Studio Code
+.vscode/
