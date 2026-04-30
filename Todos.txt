@@ -4,6 +4,9 @@ Abilities
 		- Salt and Iron
 
 Units
+	Both
+		- Add death state + remove unit
+		- Track Unit that died - some kind of XP system to be implemented here?
 	Enemies
 		- Update character Portrait
 			- Show currenly acting enemy unit (Modulate background?)
@@ -15,3 +18,14 @@ Units
 
 Turns
 	- Update AP Counter + disable ability buttons if current_ap < ability_cost
+
+
+
+
+General Ideation:
+	-	Non Combat encounter solutions
+		- Pacifist options:
+			-	Charming (Skill based - result in future benefits?)
+			-	Diplomacy (Skill based)
+			-	Stealth (X turns without being in enemy range)
+			
