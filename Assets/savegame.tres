@@ -1,13 +1,13 @@
-[gd_resource type="Resource" script_class="GameData" format=3]
+[gd_resource type="Resource" script_class="GameData" format=3 uid="uid://c6cr7g2fuyxmh"]
 
-[ext_resource type="Script" path="res://Scripts/ability.gd" id="1_ov0du"]
-[ext_resource type="Resource" path="res://Abilities/teleport.tres" id="2_bp00r"]
-[ext_resource type="Resource" path="res://Abilities/widdershins_strike.tres" id="3_5ie8h"]
-[ext_resource type="Script" path="res://Scripts/unit_data.gd" id="4_gkk6g"]
-[ext_resource type="Texture2D" path="res://Assets/Characters/spook.png" id="5_eh4qd"]
-[ext_resource type="Script" path="res://game_state.gd" id="6_qlshv"]
-[ext_resource type="Texture2D" path="res://Assets/Characters/witch.png" id="7_ta8ws"]
-[ext_resource type="Texture2D" path="res://Assets/Characters/ghost.png" id="8_4w2nr"]
+[ext_resource type="Script" uid="uid://bp34lrn2n88r5" path="res://Scripts/ability.gd" id="1_ov0du"]
+[ext_resource type="Resource" uid="uid://b7s42xbh8d7y2" path="res://Abilities/teleport.tres" id="2_bp00r"]
+[ext_resource type="Resource" uid="uid://vyqwxu8evpb0" path="res://Abilities/widdershins_strike.tres" id="3_5ie8h"]
+[ext_resource type="Script" uid="uid://ckohomhh5krns" path="res://Scripts/unit_data.gd" id="4_gkk6g"]
+[ext_resource type="Texture2D" uid="uid://cf5q5x0fc1byy" path="res://Assets/Characters/spook.png" id="5_eh4qd"]
+[ext_resource type="Script" uid="uid://b1vcbwbbfwpf7" path="res://game_state.gd" id="6_qlshv"]
+[ext_resource type="Texture2D" uid="uid://d0pqkicy086yj" path="res://Assets/Characters/witch.png" id="7_ta8ws"]
+[ext_resource type="Texture2D" uid="uid://xiomrsqti5sv" path="res://Assets/Characters/ghost.png" id="8_4w2nr"]
 
 [sub_resource type="Resource" id="Resource_80owm"]
 script = ExtResource("4_gkk6g")
@@ -42,6 +42,9 @@ start_position = Vector2i(6, 6)
 unit_class = "Ghost"
 unit_subclass = "Small"
 player_unit = false
+base_hp = 3
+speed = 1
+resolve = 1
 metadata/_custom_type_script = "uid://ckohomhh5krns"
 
 [resource]

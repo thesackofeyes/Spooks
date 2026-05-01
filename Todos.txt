@@ -5,8 +5,7 @@ Abilities
 
 Units
 	Both
-		- Add death state + remove unit
-		- Track Unit that died - some kind of XP system to be implemented here?
+		- Track Unit that died - some kind of XP system to be implemented here? - spook.gd 'unit_defeated' function
 	Enemies
 		- Update character Portrait
 			- Show currenly acting enemy unit (Modulate background?)
@@ -18,8 +17,6 @@ Units
 
 Turns
 	- Update AP Counter + disable ability buttons if current_ap < ability_cost
-
-
 
 
 General Ideation:

@@ -35,10 +35,28 @@ func change_state(new_state: String):
 	current_state = state_machine[new_state]
 	current_state.enter(self)
 
+func unit_defeated():
+	print("Unit ", data.unit_class, data.unit_subclass, " has been defeated.")
+	queue_free() # Remove unit from scene if HP is 0 or less
+
+	# TODO: Add defeat logic
+		# If player unit is defeated
+			# If all player units are defeated, trigger game over
+		# If enemy unit is defeated, 
+			#check for end of battle conditions
+			# Store defeated enemy for XP and loot rewards
+		# If combat unresolved 
+			#Update UI, remove from turn order, etc.
+
+
 func input_received() -> bool:
 	# For example: press "Enter" or "Space" to act
 	return Input.is_action_just_pressed("ui_accept")
 
 func _process(delta):
+	if current_hp <= 0:
+		unit_defeated()
+		return
+
 	if current_state != state_machine["Waiting"]:
 		current_state.update(self, delta)
