@@ -90,6 +90,21 @@ func _process(delta: float) -> void:
 	draw_traversable_path(current_unit)
 	$CharacterPortrait.update_portrait(current_unit.current_hp, current_unit.current_ap, current_unit.current_moves, Vector2i(current_unit.data.hero_sprite_x, current_unit.data.hero_sprite_y))
 	
+func check_combat_end_conditions():
+	var active_player_units = 0
+	for player_unit in player_units:
+		if player_unit.current_hp > 0:
+			active_player_units += 1
+	if active_player_units == 0:
+		print("All player units defeated. Game Over.")
+	
+	# if no enemy units remain with hp > 0, trigger victory conditions
+	var active_enemy_units = 0
+	for enemy_unit in enemy_units:
+		if enemy_unit.current_hp > 0:
+			active_enemy_units += 1
+	if active_enemy_units == 0:
+		print("All enemy units defeated. Victory!")
 
 func draw_traversable_path(unit):
 	if action == 'movement':
