@@ -5,7 +5,6 @@ Abilities
 
 Units
 	Both
-		- Add end state for when all enemies are unit_defeated (Temporarily Just log a message and restart)
 		- Add end state for when all friendly units are unit_defeated (Temporarily just log a message and restart)
 	Enemies
 		- Update character Portrait

@@ -27,6 +27,15 @@ func start_turn() -> void:
 	current_unit = units[current_index]
 	current_unit.start_turn()  # sets state to Idle
 
+	# if current unit hp is 0 or less, skip turn and move to next unit
+	if current_unit.current_hp <= 0:
+		print("Current unit ", current_unit.data.unit_class, current_unit.data.unit_subclass,
+			" is defeated. Skipping turn.")
+		end_turn()
+		return
+
+	# if current unit is an enemy, trigger AI behavior here
+
 func end_turn() -> void:
 	if units.is_empty():
 		return

@@ -6,7 +6,10 @@ extends Node2D
 @onready var abilities_container := $Abilities
 @export var unit_scene: PackedScene = load("res://Scenes/unit.tscn")
 
+var all_units: Array = []
 var player_units: Array = []
+var enemy_units: Array = []
+
 var current_unit
 var previous_unit
 
@@ -24,16 +27,24 @@ func _ready() -> void:
 		var new_unit := unit_scene.instantiate() as Unit
 		new_unit.data = unit
 		
-		player_units.append(new_unit)
+		if new_unit.data.player_unit:
+			player_units.append(new_unit)
+		else:
+			enemy_units.append(new_unit)
+
+		all_units.append(new_unit)
+
 		$Units.add_child(new_unit)
+
+		print("Placing unit ", new_unit.data.unit_class, new_unit.data.unit_subclass, " at start position: ", new_unit.data.start_position)
 		
 		var new_unit_start = start_square - new_unit.data.start_position
 		move_to(new_unit, new_unit_start, 0)
 	
 	unit_nodes = $Units.get_children()
 
-	current_unit = player_units[0]
-	TurnManager.start_battle(player_units)
+	current_unit = all_units[0]
+	TurnManager.start_battle(all_units)
 	hover_grid.clicked.connect(_on_grid_clicked)
 
 func _process(delta: float) -> void:
@@ -153,27 +164,29 @@ func tween_along_path(unit: Node2D, path: Array, speed: float, distance_cap: int
 			tween.tween_interval(overlap)
 			
 func attack(attack_tile: Vector2i):
-		var attack_path = Pathfinding.astar_find_path(tilemap_node, obstacles_tilemap, current_unit.position, attack_tile, unit_nodes)
-		var attack_tile_distance = attack_path.size() - 1
+	var attack_path = Pathfinding.astar_find_path(tilemap_node, obstacles_tilemap, current_unit.position, attack_tile, unit_nodes)
+	var attack_tile_distance = attack_path.size() - 1
+	
+	if attack_tile_distance <= current_unit.data.base_attack_range:
+		current_unit.current_hp -= 1
 		
-		if attack_tile_distance <= current_unit.data.base_attack_range:
-			current_unit.current_hp -= 1
-			
-			var attack_tile_unit = null
-			var units = $Units.get_children()
-			for unit in units:
-				var unit_cell = Utils.local_to_cell(unit.position)
-				if unit_cell == attack_tile:
-					attack_tile_unit = unit
-			
-			if attack_tile_unit != null:
-				attack_tile_unit.process_damage(current_unit.data.base_attack_damage, current_unit)
-				$AttackButton.set_pressed(false)
-				has_attacked = true
-			else:
-				print("Attacking an empty tile, attack action preserved")
+		var attack_tile_unit = null
+		var units = $Units.get_children()
+		for unit in units:
+			var unit_cell = Utils.local_to_cell(unit.position)
+			if unit_cell == attack_tile:
+				attack_tile_unit = unit
+		
+		if attack_tile_unit != null:
+			attack_tile_unit.process_damage(current_unit.data.base_attack_damage, current_unit)
+			$AttackButton.set_pressed(false)
+			has_attacked = true
 		else:
-			print("Attacking out of range, attack action preserved")
+			print("Attacking an empty tile, attack action preserved")
+	else:
+		print("Attacking out of range, attack action preserved")
+	
+	print("Enemy Units: ", enemy_units)
 
 
 

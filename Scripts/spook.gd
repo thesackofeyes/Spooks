@@ -45,7 +45,7 @@ func process_damage(amount: int, attacker: Unit):
 
 func unit_defeated(attacker: Unit):
 	print("Unit ", data.unit_class, data.unit_subclass, " has been defeated by ", attacker.data.unit_class, attacker.data.unit_subclass, ".")
-	queue_free() # Remove unit from scene if HP is 0 or less
+	visible = false
 
 	if data.player_unit:
 		print("Player unit defeated. Check for game over conditions.")
@@ -54,6 +54,14 @@ func unit_defeated(attacker: Unit):
 		attacker.data.current_xp += data.experience_reward
 		print("Attacker ", attacker.data.unit_class, attacker.data.unit_subclass, " gains ", data.experience_reward, " XP. Total XP: ", attacker.data.current_xp)
 		print("Enemy unit defeated. Check for end of battle conditions and rewards.")
+		
+		# if no enemy units remain with hp > 0, trigger victory conditions
+		var active_enemy_units = 0
+		for enemy_unit in get_parent().get_parent().enemy_units:
+			if enemy_unit.current_hp > 0:
+				active_enemy_units += 1
+		if active_enemy_units == 0:
+			print("All enemy units defeated. Victory!")
 
 
 	# TODO: Add defeat logic
