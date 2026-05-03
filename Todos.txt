@@ -1,6 +1,6 @@
 Abilities
 	- Attacks
-		- Currently attack can target self - this shouldn't work
+		- Currently attack can target self and allies - this shouldn't work
 	- Cast Abilities
 		- Teleport
 		- Salt and Iron
