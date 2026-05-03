@@ -2,16 +2,15 @@ extends Resource
 class_name UnitData
 
 # Image Data
-@export var sprite: Texture2D
-
+@export var sprite: Texture2D # Main sprite, used for combat scenes
 @export var sprite_h_frames: int
 @export var sprite_v_frames: int
-
 @export var sprite_scale: float = 1.0
 
 @export var icon_x: int = 0
 @export var icon_y: int = 0
 
+# UI Sprite, used for character portraits
 @export var hero_sprite_x: int = 0
 @export var hero_sprite_y: int = 0
 
