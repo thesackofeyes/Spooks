@@ -38,6 +38,7 @@ metadata/_custom_type_script = "uid://ckohomhh5krns"
 script = ExtResource("4_gkk6g")
 sprite = ExtResource("8_4w2nr")
 sprite_scale = 0.4
+hero_sprite_x = 2
 start_position = Vector2i(6, 6)
 unit_class = "Ghost"
 unit_subclass = "Small"
