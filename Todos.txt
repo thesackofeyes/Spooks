@@ -1,11 +1,12 @@
 Abilities
+	- Attacks
+		- Currently attack can target self - this shouldn't work
 	- Cast Abilities
 		- Teleport
 		- Salt and Iron
 
 Units
 	Enemies
-		- Update character Portrait
 		- Create Enemy Info on Hover
 			- Name
 			- Portrait
@@ -14,6 +15,11 @@ Units
 
 Turns
 	- Update AP Counter + disable ability buttons if current_ap < ability_cost
+
+
+Visuals
+	- Update disabled state on buttons to look not shit
+
 
 
 General Ideation:
