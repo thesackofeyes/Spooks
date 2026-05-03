@@ -5,7 +5,8 @@ Abilities
 
 Units
 	Both
-		- Track Unit that died - some kind of XP system to be implemented here? - spook.gd 'unit_defeated' function
+		- Add end state for when all enemies are unit_defeated (Temporarily Just log a message and restart)
+		- Add end state for when all friendly units are unit_defeated (Temporarily just log a message and restart)
 	Enemies
 		- Update character Portrait
 			- Show currenly acting enemy unit (Modulate background?)

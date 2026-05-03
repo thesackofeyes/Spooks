@@ -35,9 +35,26 @@ func change_state(new_state: String):
 	current_state = state_machine[new_state]
 	current_state.enter(self)
 
-func unit_defeated():
-	print("Unit ", data.unit_class, data.unit_subclass, " has been defeated.")
+func process_damage(amount: int, attacker: Unit):
+	var updated_hp = current_hp - amount
+	current_hp = max(updated_hp, 0)
+	print("Unit ", data.unit_class, data.unit_subclass, " takes ", amount, " damage from ", attacker.data.unit_class, attacker.data.unit_subclass, ". Updated HP: ", current_hp)
+
+	if current_hp <= 0:
+		unit_defeated(attacker)
+
+func unit_defeated(attacker: Unit):
+	print("Unit ", data.unit_class, data.unit_subclass, " has been defeated by ", attacker.data.unit_class, attacker.data.unit_subclass, ".")
 	queue_free() # Remove unit from scene if HP is 0 or less
+
+	if data.player_unit:
+		print("Player unit defeated. Check for game over conditions.")
+
+	if !data.player_unit:
+		attacker.data.current_xp += data.experience_reward
+		print("Attacker ", attacker.data.unit_class, attacker.data.unit_subclass, " gains ", data.experience_reward, " XP. Total XP: ", attacker.data.current_xp)
+		print("Enemy unit defeated. Check for end of battle conditions and rewards.")
+
 
 	# TODO: Add defeat logic
 		# If player unit is defeated
@@ -54,9 +71,5 @@ func input_received() -> bool:
 	return Input.is_action_just_pressed("ui_accept")
 
 func _process(delta):
-	if current_hp <= 0:
-		unit_defeated()
-		return
-
 	if current_state != state_machine["Waiting"]:
 		current_state.update(self, delta)

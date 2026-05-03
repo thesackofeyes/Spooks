@@ -80,9 +80,6 @@ func _process(delta: float) -> void:
 	$CharacterPortrait.update_portrait(current_unit.current_hp, current_unit.current_ap, current_unit.current_moves, Vector2i(current_unit.data.hero_sprite_x, current_unit.data.hero_sprite_y))
 	
 
-	
-	
-
 func draw_traversable_path(unit):
 	if action == 'movement':
 		hover_grid.set_overlay_path(Pathfinding.astar_find_path(tilemap_node, obstacles_tilemap, unit.position, hover_grid.hover_cell, unit_nodes))
@@ -161,8 +158,6 @@ func attack(attack_tile: Vector2i):
 		
 		if attack_tile_distance <= current_unit.data.base_attack_range:
 			current_unit.current_hp -= 1
-			$AttackButton.set_pressed(false)
-			has_attacked = true
 			
 			var attack_tile_unit = null
 			var units = $Units.get_children()
@@ -172,13 +167,14 @@ func attack(attack_tile: Vector2i):
 					attack_tile_unit = unit
 			
 			if attack_tile_unit != null:
-				var updated_hp = attack_tile_unit.current_hp - current_unit.data.base_attack_damage
-				attack_tile_unit.current_hp = max(updated_hp, 0)
-				print("Dealing ", current_unit.data.base_attack_damage, " damage to ", attack_tile_unit.data.unit_class, " on tile: ", attack_tile, " Updated HP: ", updated_hp)
+				attack_tile_unit.process_damage(current_unit.data.base_attack_damage, current_unit)
+				$AttackButton.set_pressed(false)
+				has_attacked = true
 			else:
-				print("Attacking an empty tile")
+				print("Attacking an empty tile, attack action preserved")
 		else:
-			print("Attacking out of range")
+			print("Attacking out of range, attack action preserved")
+
 
 
 func _on_end_turn_pressed() -> void:

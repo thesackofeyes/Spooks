@@ -24,7 +24,8 @@ class_name UnitData
 
 @export var player_unit: bool = true
 @export var level: int = 1
-
+@export var current_xp: int = 0
+@export var experience_reward: int = 200
 
 # Stats
 @export var base_hp: int = 12
