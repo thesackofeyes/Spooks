@@ -6,6 +6,6 @@
 script = ExtResource("1_6w37w")
 name = "Widdershins Strike"
 icon_x = 1
-description = "Allows instant transportation to any unoccupied tile."
+description = "An attack with a staff, striking counter to the clock."
 cost = 8
 compatible_subclasses = Array[String](["All"])
