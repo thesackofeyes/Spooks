@@ -2,6 +2,44 @@
 
 [ext_resource type="Script" uid="uid://bqe6lh5ciky1i" path="res://Scripts/spook.gd" id="1_j3fvo"]
 
+[sub_resource type="Animation" id="Animation_yjw0f"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_c86kq"]
+resource_name = "active_unit"
+length = 2.5
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.76666665, 1.5666667),
+"transitions": PackedFloat32Array(1, 0.2871746, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(1, 0.5058824, 0.48235294, 1), Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_8omp6"]
+_data = {
+&"RESET": SubResource("Animation_yjw0f"),
+&"active_unit": SubResource("Animation_c86kq")
+}
+
 [node name="Unit" type="Node2D" unique_id=687606312]
 y_sort_enabled = true
 script = ExtResource("1_j3fvo")
@@ -9,3 +47,6 @@ script = ExtResource("1_j3fvo")
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1236342330]
 position = Vector2(0, -25)
 scale = Vector2(0.6, 0.6)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Sprite2D" unique_id=1412366795]
+libraries/ = SubResource("AnimationLibrary_8omp6")

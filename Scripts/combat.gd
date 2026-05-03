@@ -206,7 +206,7 @@ func attack(attack_tile: Vector2i):
 
 
 func _on_end_turn_pressed() -> void:
-	TurnManager.end_turn()
+	current_unit.end_turn()
 
 func _on_move_button_toggled(toggled_on: bool, source: BaseButton) -> void:
 	if toggled_on == true:

@@ -4,11 +4,8 @@ Abilities
 		- Salt and Iron
 
 Units
-	Both
-		- Add end state for when all friendly units are unit_defeated (Temporarily just log a message and restart)
 	Enemies
 		- Update character Portrait
-			- Show currenly acting enemy unit (Modulate background?)
 		- Create Enemy Info on Hover
 			- Name
 			- Portrait

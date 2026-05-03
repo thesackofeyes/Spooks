@@ -4,6 +4,7 @@ class_name Unit
 @export var data: UnitData
 
 @onready var sprite = $Sprite2D
+@onready var sprite_animation_player = $Sprite2D/AnimationPlayer
 @onready var combat_node = get_parent().get_parent()
 var state_machine: Dictionary = {}
 var current_state
@@ -28,6 +29,11 @@ func _ready() -> void:
 
 func start_turn():
 	change_state("Idle")
+	sprite_animation_player.play("active_unit")
+
+func end_turn():
+	sprite_animation_player.stop()
+	TurnManager.end_turn()
 
 func change_state(new_state: String):
 	if current_state != null:
