@@ -193,6 +193,10 @@ func attack(attack_tile: Vector2i):
 				attack_tile_unit = unit
 		
 		if attack_tile_unit != null:
+			if current_unit.data.player_unit == attack_tile_unit.data.player_unit:
+				print("Cannot attack unit on the same side, attack action preserved")
+				return
+
 			attack_tile_unit.process_damage(current_unit.data.base_attack_damage, current_unit)
 			$AttackButton.set_pressed(false)
 			has_attacked = true
