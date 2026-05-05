@@ -12,11 +12,13 @@ Units
 			- Flavour Text
 
 Turns
-	- Update AP Counter + disable ability buttons if current_ap < ability_cost
+	- Update AP Counter 
 
 
 Visuals
 	- Update disabled state on buttons to look not shit
+		- Unique button visuals for used attack/movement
+		- Alternate unique visuals for when not enough available AP to use ability
 
 
 

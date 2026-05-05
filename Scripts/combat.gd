@@ -59,7 +59,7 @@ func _process(delta: float) -> void:
 		current_unit.current_moves = current_unit.data.speed
 		previous_unit = current_unit
 
-		abilities_container.update_abilites(current_unit.data.abilities)
+		abilities_container.update_abilites(current_unit)
 		has_attacked = false
 
 		print("current unit: ", current_unit.current_hp)
