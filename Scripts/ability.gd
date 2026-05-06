@@ -1,6 +1,7 @@
 extends Resource
 class_name Ability
 
+@export var ability_script: GDScript
 @export var name: String = ""
 @export var icon_x: int = 0
 @export var icon_y: int = 0

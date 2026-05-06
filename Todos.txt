@@ -1,6 +1,12 @@
 Abilities
 	- Cast Abilities
 		- Teleport
+			- Script has been created, and passes in with the current unit.
+			- Update to fire movement, using the existing move function, using correct speed parameters for teleporting.
+			- Ensure this validates available tiles
+			- Ensure this updates AP when used
+			- Add functionality to stop cast when toggle button clicked again
+
 		- Salt and Iron
 
 Units
@@ -17,7 +23,7 @@ Turns
 
 Visuals
 	- Update disabled state on buttons to look not shit
-		- Unique button visuals for used attack/movement
+		- Unique button visuals for single use actions (attack/movement)
 		- Alternate unique visuals for when not enough available AP to use ability
 
 

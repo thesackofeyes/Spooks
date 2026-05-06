@@ -1,9 +1,16 @@
 [gd_resource type="Resource" script_class="UnitData" format=3 uid="uid://cdkl2i7eq55k7"]
 
 [ext_resource type="Script" uid="uid://bp34lrn2n88r5" path="res://Scripts/ability.gd" id="1_b8cdl"]
-[ext_resource type="Resource" uid="uid://b7s42xbh8d7y2" path="res://Abilities/teleport.tres" id="2_mqq6q"]
 [ext_resource type="Script" uid="uid://ckohomhh5krns" path="res://Scripts/unit_data.gd" id="2_s0v7f"]
 [ext_resource type="Texture2D" uid="uid://d0pqkicy086yj" path="res://Assets/Characters/witch.png" id="4_rgpwr"]
+
+[sub_resource type="Resource" id="Resource_khk0v"]
+script = ExtResource("1_b8cdl")
+name = "Teleport"
+description = "Allows instant transportation to any unoccupied tile."
+damage = 5
+cost = 3
+compatible_subclasses = Array[String](["All"])
 
 [resource]
 script = ExtResource("2_s0v7f")
@@ -17,5 +24,5 @@ base_hp = 8
 speed = 6
 stamina = 8
 base_attack_range = 5
-abilities = Array[ExtResource("1_b8cdl")]([ExtResource("2_mqq6q")])
+abilities = Array[ExtResource("1_b8cdl")]([SubResource("Resource_khk0v")])
 metadata/_custom_type_script = "uid://ckohomhh5krns"

@@ -62,9 +62,6 @@ func _process(delta: float) -> void:
 		abilities_container.update_abilites(current_unit)
 		has_attacked = false
 
-		print("current unit: ", current_unit.current_hp)
-		
-		# TODO: Differentiate player/enemy turns with UI and behavior
 	if current_unit.data.player_unit == false:
 		# Disable Movement/Attack buttons during enemy turns
 		$MoveButton.disabled = true

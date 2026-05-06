@@ -1,9 +1,11 @@
 [gd_resource type="Resource" script_class="Ability" format=3 uid="uid://b7s42xbh8d7y2"]
 
+[ext_resource type="Script" uid="uid://l34l1wdjltxu" path="res://Scripts/Abilities/Teleport.gd" id="1_a1uqd"]
 [ext_resource type="Script" uid="uid://bp34lrn2n88r5" path="res://Scripts/ability.gd" id="1_nlp10"]
 
 [resource]
 script = ExtResource("1_nlp10")
+ability_script = ExtResource("1_a1uqd")
 name = "Teleport"
 description = "Allows instant transportation to any unoccupied tile."
 damage = 5
