@@ -1,11 +1,6 @@
 Abilities
 	- Cast Abilities
-		- Teleport
-			- Script has been created, and passes in with the current unit.
-			- Update to fire movement, using the existing move function, using correct speed parameters for teleporting.
-			- Ensure this validates available tiles
-			- Ensure this updates AP when used
-			- Add functionality to stop cast when toggle button clicked again
+		- Teleport - See Teleport.gd
 
 		- Salt and Iron
 

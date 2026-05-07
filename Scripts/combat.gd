@@ -16,6 +16,11 @@ var previous_unit
 var has_attacked = false
 var unit_nodes
 
+var walk_speed = 1.1
+var movement_speed = walk_speed
+var default_movement_ap_cost = 0
+var current_movement_ap_cost = default_movement_ap_cost
+
 var action = ''
 
 func _ready() -> void:
@@ -106,11 +111,8 @@ func check_combat_end_conditions():
 func draw_traversable_path(unit):
 	if action == 'movement':
 		hover_grid.set_overlay_path(Pathfinding.astar_find_path(tilemap_node, obstacles_tilemap, unit.position, hover_grid.hover_cell, unit_nodes))
-		hover_grid.overlay_distance = current_unit.current_moves
 	elif action == 'attack':
-		# Update to display from attack range
 		hover_grid.set_overlay_path(Pathfinding.astar_find_path(tilemap_node, obstacles_tilemap, unit.position, hover_grid.hover_cell, unit_nodes))
-		hover_grid.overlay_distance = current_unit.data.base_attack_range
 	else:
 		hover_grid.overlay_distance = 0
 
@@ -137,6 +139,9 @@ func move_to(unit, destination, speed, distance_cap: int = -1):
 			number_of_tiles_moved = distance_cap
 		current_unit.current_moves -= number_of_tiles_moved
 		tween_along_path(unit, path, 0.4, distance_cap)
+	
+	unit.current_ap -= current_movement_ap_cost
+	print("updated AP", unit.current_ap)
 
 func _on_grid_clicked(visual_cell: Vector2i):
 	for unit_node in unit_nodes:
@@ -145,7 +150,7 @@ func _on_grid_clicked(visual_cell: Vector2i):
 	if visual_cell == Vector2i(-1, -1):
 		return
 	if action == 'movement':
-		move_to(current_unit, visual_cell, 1.1, current_unit.current_moves)
+		move_to(current_unit, visual_cell, movement_speed, current_unit.current_moves)
 
 	if action == 'attack':
 		attack(visual_cell)
@@ -205,19 +210,20 @@ func attack(attack_tile: Vector2i):
 	print("Enemy Units: ", enemy_units)
 
 
-
 func _on_end_turn_pressed() -> void:
 	current_unit.end_turn()
 
 func _on_move_button_toggled(toggled_on: bool, source: BaseButton) -> void:
 	if toggled_on == true:
 		action = 'movement'
+		hover_grid.overlay_distance = current_unit.current_moves
 	else:
 		action = ''
 
 func _on_attack_button_toggled(toggled_on: bool) -> void:
 	if toggled_on == true:
 		action = 'attack'
+		hover_grid.overlay_distance = current_unit.data.base_attack_range
 	else:
 		action = ''
 
