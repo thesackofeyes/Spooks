@@ -60,7 +60,7 @@ func _process(delta: float) -> void:
 		$MoveButton.set_pressed(false)
 		$AttackButton.set_pressed(false)
 		# Reset unit stats at start of turn
-		current_unit.current_ap = current_unit.data.stamina
+		current_unit.update_ap(current_unit.data.stamina)
 		current_unit.current_moves = current_unit.data.speed
 		previous_unit = current_unit
 
@@ -109,7 +109,7 @@ func check_combat_end_conditions():
 		print("All enemy units defeated. Victory!")
 
 func draw_traversable_path(unit):
-	if action == 'movement':
+	if action == 'movement' and movement_speed > 0:
 		hover_grid.set_overlay_path(Pathfinding.astar_find_path(tilemap_node, obstacles_tilemap, unit.position, hover_grid.hover_cell, unit_nodes))
 	elif action == 'attack':
 		hover_grid.set_overlay_path(Pathfinding.astar_find_path(tilemap_node, obstacles_tilemap, unit.position, hover_grid.hover_cell, unit_nodes))
@@ -140,8 +140,18 @@ func move_to(unit, destination, speed, distance_cap: int = -1):
 		current_unit.current_moves -= number_of_tiles_moved
 		tween_along_path(unit, path, 0.4, distance_cap)
 	
-	unit.current_ap -= current_movement_ap_cost
+	unit.update_ap(current_movement_ap_cost*-1)
+	movement_speed = walk_speed
+	current_movement_ap_cost = default_movement_ap_cost
 	print("updated AP", unit.current_ap)
+
+func unpress_ability_buttons():
+	for ability_button in abilities_container.ability_container.get_children():
+		ability_button.set_pressed(false)
+
+func unpress_action_buttons():
+	$MoveButton.set_pressed(false)
+	$AttackButton.set_pressed(false)
 
 func _on_grid_clicked(visual_cell: Vector2i):
 	for unit_node in unit_nodes:
@@ -155,7 +165,6 @@ func _on_grid_clicked(visual_cell: Vector2i):
 	if action == 'attack':
 		attack(visual_cell)
 		
-
 # Moves a unit along a path of Vector2i tiles using Tweens
 func tween_along_path(unit: Node2D, path: Array, speed: float, distance_cap: int, overlap: float = -0.5):
 	if path.size() == 0:
@@ -209,11 +218,16 @@ func attack(attack_tile: Vector2i):
 	
 	print("Enemy Units: ", enemy_units)
 
-
 func _on_end_turn_pressed() -> void:
 	current_unit.end_turn()
 
+func load_ability_buttons():
+	if current_unit != null:
+		abilities_container.update_abilites(current_unit)
+
+
 func _on_move_button_toggled(toggled_on: bool, source: BaseButton) -> void:
+	unpress_ability_buttons()
 	if toggled_on == true:
 		action = 'movement'
 		hover_grid.overlay_distance = current_unit.current_moves
@@ -221,11 +235,13 @@ func _on_move_button_toggled(toggled_on: bool, source: BaseButton) -> void:
 		action = ''
 
 func _on_attack_button_toggled(toggled_on: bool) -> void:
+	unpress_ability_buttons()
 	if toggled_on == true:
 		action = 'attack'
 		hover_grid.overlay_distance = current_unit.data.base_attack_range
 	else:
 		action = ''
+
 
 # Tooltip Signals
 
@@ -239,13 +255,11 @@ func _on_attack_button_mouse_entered() -> void:
 func _on_attack_button_mouse_exited() -> void:
 	TooltipManager.hide_tooltip()
 
-
 func _on_move_button_mouse_entered() -> void:
 	TooltipManager.show_tooltip(
 		"Move",
 		str(current_unit.current_moves) + " Tiles" 
 	)
-
 
 func _on_move_button_mouse_exited() -> void:
 	TooltipManager.hide_tooltip()

@@ -22,6 +22,7 @@ func _on_mouse_exited() -> void:
 
 
 func _on_toggled(_toggled_on: bool) -> void:
+	CombatScene.unpress_action_buttons()
 	if data.ability_script != null:
 		print("Loading ability script: ", data.ability_script)
 		var ability_script_instance = data.ability_script.new()

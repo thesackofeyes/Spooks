@@ -1,7 +1,5 @@
 Abilities
 	- Cast Abilities
-		- Teleport - See Teleport.gd
-
 		- Salt and Iron
 
 Units
@@ -11,10 +9,6 @@ Units
 			- Portrait
 			- HP
 			- Flavour Text
-
-Turns
-	- Update AP Counter 
-
 
 Visuals
 	- Update disabled state on buttons to look not shit

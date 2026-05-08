@@ -3,6 +3,7 @@ class_name HoverGrid
 
 @onready var tilemap_node := $"../Grid"
 @onready var obstacles_tilemap := $"../Grid/Obstacles"
+@onready var CombatScene = get_tree().get_current_scene().get_node("Combat")
 
 signal clicked(visual_cell: Vector2i, tilemap_cell: Vector2i)
 
@@ -62,8 +63,16 @@ func _draw():
 		origin + Vector2(-half.x, 0)
 	]
 
-	draw_colored_polygon(points, Color(1, 0, 0, 0.25))
-	draw_polyline(points + [points[0]], Color(1, 0, 0), 2)
+	
+	# Draw red diamond for current hover cell
+	# If combat_scene.action is 'movement' make this blue
+
+	if CombatScene.action == 'movement':
+		draw_colored_polygon(points, Color(0, 0, 1, 0.25))
+		draw_polyline(points + [points[0]], Color(0, 0, 1), 2)
+	else:
+		draw_colored_polygon(points, Color(1, 0, 0, 0.25))
+		draw_polyline(points + [points[0]], Color(1, 0, 0), 2)
 	#End Draw Current Mouse Hover
 	
 	#Draw Movement Path

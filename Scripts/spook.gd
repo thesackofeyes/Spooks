@@ -62,6 +62,10 @@ func unit_defeated(attacker: Unit):
 		
 	combat_node.check_combat_end_conditions()
 
+func update_ap(value: int):
+	current_ap = max(current_ap + value, 0)
+	combat_node.unpress_ability_buttons()
+	combat_node.load_ability_buttons()
 
 func input_received() -> bool:
 	# For example: press "Enter" or "Space" to act
