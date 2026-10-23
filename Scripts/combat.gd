@@ -61,10 +61,10 @@ func _on_turn_started(unit) -> void:
 	current_unit.update_ap(current_unit.data.stamina)
 	current_unit.current_moves = current_unit.data.speed
 
-	abilities_container.update_abilites(current_unit)
+	abilities_container.update_abilities(current_unit)
 	has_attacked = false
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	unit_nodes = get_living_units()
 
 	if current_unit.data.player_unit == false:
@@ -172,7 +172,6 @@ func move_to(unit, destination, speed, distance_cap: int = -1):
 	unit.update_ap(current_movement_ap_cost*-1)
 	movement_speed = walk_speed
 	current_movement_ap_cost = default_movement_ap_cost
-	print("updated AP", unit.current_ap)
 
 func unpress_ability_buttons(except: Node = null):
 	for ability_button in abilities_container.ability_container.get_children():
@@ -184,9 +183,6 @@ func unpress_action_buttons():
 	$AttackButton.set_pressed(false)
 
 func _on_grid_clicked(visual_cell: Vector2i):
-	for unit_node in unit_nodes:
-		var unit_cell = Utils.local_to_cell(unit_node.position)
-		
 	if visual_cell == Vector2i(-1, -1):
 		return
 	if action == 'movement':
@@ -253,10 +249,10 @@ func _on_end_turn_pressed() -> void:
 
 func load_ability_buttons():
 	if current_unit != null:
-		abilities_container.update_abilites(current_unit)
+		abilities_container.update_abilities(current_unit)
 
 
-func _on_move_button_toggled(toggled_on: bool, source: BaseButton) -> void:
+func _on_move_button_toggled(toggled_on: bool) -> void:
 	if toggled_on == true:
 		unpress_ability_buttons()
 		$AttackButton.set_pressed(false)

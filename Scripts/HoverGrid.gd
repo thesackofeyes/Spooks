@@ -5,7 +5,7 @@ class_name HoverGrid
 @onready var obstacles_tilemap := $"../Grid/Obstacles"
 @onready var CombatScene = get_tree().get_current_scene().get_node("Combat")
 
-signal clicked(visual_cell: Vector2i, tilemap_cell: Vector2i)
+signal clicked(visual_cell: Vector2i)
 
 var hover_cell := Vector2i.ZERO
 
@@ -33,10 +33,6 @@ func get_mouse_cell() -> Vector2i:
 	# if outside of grid bounds, do nothing
 	if x < 0 or x >= GameConfig.grid_width or y < 0 or y >= GameConfig.grid_height:
 		return Vector2i(-1, -1)
-
-	# Clamp to grid bounds
-	x = clamp(x, 0, GameConfig.grid_width - 1)
-	y = clamp(y, 0, GameConfig.grid_height - 1)
 
 	return Vector2i(x, y)
 
@@ -96,4 +92,4 @@ func _draw():
 func _unhandled_input(event):
 	if event is InputEventMouseButton and event.pressed:
 		if event.button_index == MOUSE_BUTTON_LEFT:
-			emit_signal("clicked", get_mouse_cell())
+			clicked.emit(get_mouse_cell())

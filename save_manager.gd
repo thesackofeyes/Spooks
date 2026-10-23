@@ -5,7 +5,6 @@ const SAVE_PATH := "user://savegame.tres"
 var data: GameData
 
 func _ready():
-	var unit_scene = load("res://Scenes/unit.tscn")
 	load_game()
 
 func load_game():
