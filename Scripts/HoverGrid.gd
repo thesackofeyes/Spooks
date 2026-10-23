@@ -89,11 +89,11 @@ func _draw():
 				destination + Vector2(-half.x, 0)
 			]
 			
-			draw_colored_polygon(points, Color(1, 2, 0, 0.25))
+			draw_colored_polygon(points, Color(1, 1, 0, 0.25))
 			draw_polyline(points + [points[0]], Color(1, 1, 0), 2)
 	#End Draw Movement Path
 
-func _input(event):
+func _unhandled_input(event):
 	if event is InputEventMouseButton and event.pressed:
 		if event.button_index == MOUSE_BUTTON_LEFT:
 			emit_signal("clicked", get_mouse_cell())

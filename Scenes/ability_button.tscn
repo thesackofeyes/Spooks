@@ -24,6 +24,7 @@ offset_bottom = -228.0
 grow_horizontal = 2
 grow_vertical = 2
 scale = Vector2(0.75, 0.75)
+focus_mode = 0
 mouse_default_cursor_shape = 2
 theme = SubResource("Theme_smycg")
 toggle_mode = true

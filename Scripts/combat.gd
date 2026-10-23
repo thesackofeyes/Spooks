@@ -11,7 +11,6 @@ var player_units: Array = []
 var enemy_units: Array = []
 
 var current_unit
-var previous_unit
 
 var has_attacked = false
 var unit_nodes
@@ -46,26 +45,27 @@ func _ready() -> void:
 		var new_unit_start = start_square - new_unit.data.start_position
 		move_to(new_unit, new_unit_start, 0)
 	
-	unit_nodes = $Units.get_children()
+	unit_nodes = get_living_units()
 
-	current_unit = all_units[0]
+	TurnManager.turn_started.connect(_on_turn_started)
 	TurnManager.start_battle(all_units)
 	hover_grid.clicked.connect(_on_grid_clicked)
 
-func _process(delta: float) -> void:
-	unit_nodes = $Units.get_children()
-	
-	if current_unit != previous_unit:
-		# Reset button states:
-		$MoveButton.set_pressed(false)
-		$AttackButton.set_pressed(false)
-		# Reset unit stats at start of turn
-		current_unit.update_ap(current_unit.data.stamina)
-		current_unit.current_moves = current_unit.data.speed
-		previous_unit = current_unit
+# Fires for every turn, including a unit acting twice in a row across rounds
+func _on_turn_started(unit) -> void:
+	current_unit = unit
+	# Reset button states:
+	$MoveButton.set_pressed(false)
+	$AttackButton.set_pressed(false)
+	# Reset unit stats at start of turn
+	current_unit.update_ap(current_unit.data.stamina)
+	current_unit.current_moves = current_unit.data.speed
 
-		abilities_container.update_abilites(current_unit)
-		has_attacked = false
+	abilities_container.update_abilites(current_unit)
+	has_attacked = false
+
+func _process(delta: float) -> void:
+	unit_nodes = get_living_units()
 
 	if current_unit.data.player_unit == false:
 		# Disable Movement/Attack buttons during enemy turns
@@ -87,11 +87,38 @@ func _process(delta: float) -> void:
 			$AttackButton.disabled = true
 		else:
 			$AttackButton.disabled = false
-	
-	current_unit = TurnManager.current_unit
+
 	draw_traversable_path(current_unit)
 	$CharacterPortrait.update_portrait(current_unit.current_hp, current_unit.current_ap, current_unit.current_moves, Vector2i(current_unit.data.hero_sprite_x, current_unit.data.hero_sprite_y))
 	
+# Corpses are excluded so they don't block pathfinding or get targeted
+func get_living_units() -> Array:
+	return $Units.get_children().filter(func(unit): return not unit.is_defeated())
+
+# Returns the living unit standing on a grid cell, or null
+func get_unit_at_cell(cell: Vector2i):
+	for unit in get_living_units():
+		if Utils.local_to_cell(unit.position) == cell:
+			return unit
+	return null
+
+func has_obstacle(cell: Vector2i) -> bool:
+	return obstacles_tilemap.get_cell_tile_data(Utils.grid_cell_to_tilemap_cell(tilemap_node, cell)) != null
+
+# A cell is free if it has no obstacle and no living unit (corpses don't block)
+func is_cell_free(cell: Vector2i) -> bool:
+	if has_obstacle(cell):
+		return false
+	return get_unit_at_cell(cell) == null
+
+# Obstacles on the cells between the two ends block sight; units don't
+func has_line_of_sight(from: Vector2i, to: Vector2i) -> bool:
+	var line = Utils.get_line_cells(from, to)
+	for i in range(1, line.size() - 1):
+		if has_obstacle(line[i]):
+			return false
+	return true
+
 func check_combat_end_conditions():
 	var active_player_units = 0
 	for player_unit in player_units:
@@ -112,7 +139,9 @@ func draw_traversable_path(unit):
 	if action == 'movement' and movement_speed > 0:
 		hover_grid.set_overlay_path(Pathfinding.astar_find_path(tilemap_node, obstacles_tilemap, unit.position, hover_grid.hover_cell, unit_nodes))
 	elif action == 'attack':
-		hover_grid.set_overlay_path(Pathfinding.astar_find_path(tilemap_node, obstacles_tilemap, unit.position, hover_grid.hover_cell, unit_nodes))
+		# Show the straight line the attack travels along, rather than a walking path
+		var line = Utils.get_line_cells(Utils.local_to_cell(unit.position), hover_grid.hover_cell)
+		hover_grid.set_overlay_path(line.map(func(cell): return Utils.grid_cell_to_tilemap_cell(tilemap_node, cell)))
 	else:
 		hover_grid.overlay_distance = 0
 
@@ -145,9 +174,10 @@ func move_to(unit, destination, speed, distance_cap: int = -1):
 	current_movement_ap_cost = default_movement_ap_cost
 	print("updated AP", unit.current_ap)
 
-func unpress_ability_buttons():
+func unpress_ability_buttons(except: Node = null):
 	for ability_button in abilities_container.ability_container.get_children():
-		ability_button.set_pressed(false)
+		if ability_button != except:
+			ability_button.set_pressed(false)
 
 func unpress_action_buttons():
 	$MoveButton.set_pressed(false)
@@ -160,6 +190,11 @@ func _on_grid_clicked(visual_cell: Vector2i):
 	if visual_cell == Vector2i(-1, -1):
 		return
 	if action == 'movement':
+		# Teleport (speed 0) lands exactly on the clicked cell, so it must be free.
+		# Walking doesn't need this as pathfinding already avoids occupied cells
+		if movement_speed == 0 and not is_cell_free(visual_cell):
+			print("Cannot teleport onto an occupied tile, teleport preserved")
+			return
 		move_to(current_unit, visual_cell, movement_speed, current_unit.current_moves)
 
 	if action == 'attack':
@@ -190,33 +225,28 @@ func tween_along_path(unit: Node2D, path: Array, speed: float, distance_cap: int
 			tween.tween_interval(overlap)
 			
 func attack(attack_tile: Vector2i):
-	var attack_path = Pathfinding.astar_find_path(tilemap_node, obstacles_tilemap, current_unit.position, attack_tile, unit_nodes)
-	var attack_tile_distance = attack_path.size() - 1
-	
-	if attack_tile_distance <= current_unit.data.base_attack_range:
-		current_unit.current_hp -= 1
-		
-		var attack_tile_unit = null
-		var units = $Units.get_children()
-		for unit in units:
-			var unit_cell = Utils.local_to_cell(unit.position)
-			if unit_cell == attack_tile:
-				attack_tile_unit = unit
-		
-		if attack_tile_unit != null:
-			if current_unit.data.player_unit == attack_tile_unit.data.player_unit:
-				print("Cannot attack unit on the same side, attack action preserved")
-				return
+	var attacker_cell = Utils.local_to_cell(current_unit.position)
 
-			attack_tile_unit.process_damage(current_unit.data.base_attack_damage, current_unit)
-			$AttackButton.set_pressed(false)
-			has_attacked = true
-		else:
-			print("Attacking an empty tile, attack action preserved")
-	else:
+	if Utils.grid_distance(attacker_cell, attack_tile) > current_unit.data.base_attack_range:
 		print("Attacking out of range, attack action preserved")
-	
-	print("Enemy Units: ", enemy_units)
+		return
+
+	if not has_line_of_sight(attacker_cell, attack_tile):
+		print("No line of sight to target, attack action preserved")
+		return
+
+	var attack_tile_unit = get_unit_at_cell(attack_tile)
+	if attack_tile_unit == null:
+		print("Attacking an empty tile, attack action preserved")
+		return
+
+	if current_unit.data.player_unit == attack_tile_unit.data.player_unit:
+		print("Cannot attack unit on the same side, attack action preserved")
+		return
+
+	attack_tile_unit.process_damage(current_unit.data.base_attack_damage, current_unit)
+	$AttackButton.set_pressed(false)
+	has_attacked = true
 
 func _on_end_turn_pressed() -> void:
 	current_unit.end_turn()
@@ -227,16 +257,18 @@ func load_ability_buttons():
 
 
 func _on_move_button_toggled(toggled_on: bool, source: BaseButton) -> void:
-	unpress_ability_buttons()
 	if toggled_on == true:
+		unpress_ability_buttons()
+		$AttackButton.set_pressed(false)
 		action = 'movement'
 		hover_grid.overlay_distance = current_unit.current_moves
 	else:
 		action = ''
 
 func _on_attack_button_toggled(toggled_on: bool) -> void:
-	unpress_ability_buttons()
 	if toggled_on == true:
+		unpress_ability_buttons()
+		$MoveButton.set_pressed(false)
 		action = 'attack'
 		hover_grid.overlay_distance = current_unit.data.base_attack_range
 	else:

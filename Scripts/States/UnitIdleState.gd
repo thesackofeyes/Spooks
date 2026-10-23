@@ -5,5 +5,5 @@ func enter(unit: Node) -> void:
 	pass
 
 func update(unit: Node, delta: float) -> void:
-	if unit.input_received():
-		unit.change_state("Acting")
+	# Player input is handled by the combat UI; enemy AI can drive transitions from here later
+	pass

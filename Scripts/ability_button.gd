@@ -21,8 +21,10 @@ func _on_mouse_exited() -> void:
 	TooltipManager.hide_tooltip()
 
 
-func _on_toggled(_toggled_on: bool) -> void:
-	CombatScene.unpress_action_buttons()
+func _on_toggled(toggled_on: bool) -> void:
+	if toggled_on:
+		CombatScene.unpress_action_buttons()
+		CombatScene.unpress_ability_buttons(self)
 	if data.ability_script != null:
 		print("Loading ability script: ", data.ability_script)
 		var ability_script_instance = data.ability_script.new()

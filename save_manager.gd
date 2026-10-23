@@ -1,6 +1,6 @@
 extends Node
 
-const SAVE_PATH := "res://Assets/savegame.tres"
+const SAVE_PATH := "user://savegame.tres"
 
 var data: GameData
 
@@ -9,7 +9,11 @@ func _ready():
 	load_game()
 
 func load_game():
-	if FileAccess.file_exists(SAVE_PATH):
+	# When run from the editor, always rebuild from Units/*.tres so data edits show up immediately
+	if OS.has_feature("editor"):
+		data = GameData.new()
+		_init_default_data()
+	elif FileAccess.file_exists(SAVE_PATH):
 		data = ResourceLoader.load(SAVE_PATH)
 	else:
 		data = GameData.new()
