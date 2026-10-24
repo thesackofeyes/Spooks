@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://chl8qhvvlnr2v"]
 
-[ext_resource type="Script" uid="uid://bqe6lh5ciky1i" path="res://Scripts/spook.gd" id="1_j3fvo"]
+[ext_resource type="Script" uid="uid://bqe6lh5ciky1i" path="res://Scripts/unit.gd" id="1_j3fvo"]
 
 [sub_resource type="Animation" id="Animation_yjw0f"]
 length = 0.001

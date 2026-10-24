@@ -1,11 +1,11 @@
 extends CanvasLayer
 
-@export var tooltip_scene:= preload("res://Scenes/tooltip.tscn")
+const TOOLTIP_SCENE := preload("res://Scenes/tooltip.tscn")
 
 var tooltip_instance: Control
 
 func _ready():
-	tooltip_instance = tooltip_scene.instantiate()
+	tooltip_instance = TOOLTIP_SCENE.instantiate()
 	add_child(tooltip_instance)
 	tooltip_instance.hide()
 

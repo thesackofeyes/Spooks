@@ -1,5 +1,5 @@
-# UnitIdleState.gd
-extends "res://scripts/states/state.gd"
+extends State
+class_name UnitIdleState
 
 func enter(unit: Node) -> void:
 	pass

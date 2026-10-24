@@ -1,5 +1,5 @@
-# res://states/State.gd
-extends RefCounted  # Use RefCounted instead of Reference in Godot 4.6
+extends RefCounted
+class_name State
 
 func enter(unit: Node) -> void:
 	pass

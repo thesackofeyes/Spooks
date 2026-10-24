@@ -1,5 +1,5 @@
-# res://states/UnitActingState.gd
-extends "res://scripts/states/state.gd"
+extends State
+class_name UnitActingState
 
 var action_completed: bool = false  # tracks if the unit finished acting
 var action_timer: float = 0.0       # optional delay for animations

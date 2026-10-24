@@ -4,7 +4,8 @@ extends Node2D
 @onready var obstacles_tilemap := $"Grid/Obstacles"
 @onready var move_button := $MoveButton
 @onready var abilities_container := $Abilities
-@export var unit_scene: PackedScene = load("res://Scenes/unit.tscn")
+
+const UNIT_SCENE := preload("res://Scenes/unit.tscn")
 
 var all_units: Array = []
 var player_units: Array = []
@@ -28,7 +29,7 @@ func _ready() -> void:
 	var units = SaveManager.data.units
 	
 	for unit in units:
-		var new_unit := unit_scene.instantiate() as Unit
+		var new_unit := UNIT_SCENE.instantiate() as Unit
 		new_unit.data = unit
 		
 		if new_unit.data.player_unit:

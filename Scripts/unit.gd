@@ -22,9 +22,9 @@ func _ready() -> void:
 	sprite.frame = data.icon_y * sprite.hframes + data.icon_x
 	sprite.scale = Vector2(data.sprite_scale, data.sprite_scale)
 	state_machine = {
-		"Idle": preload("res://Scripts/States/UnitIdleState.gd").new(),
-		"Acting": preload("res://Scripts/States/UnitActingState.gd").new(),
-		"Waiting": preload("res://Scripts/States/UnitWaitingState.gd").new()
+		"Idle": UnitIdleState.new(),
+		"Acting": UnitActingState.new(),
+		"Waiting": UnitWaitingState.new()
 	}
 	current_state = state_machine["Waiting"]
 	current_hp = data.base_hp

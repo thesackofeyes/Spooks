@@ -2,7 +2,7 @@
 
 [ext_resource type="TileSet" uid="uid://lfp62t3n5luv" path="res://Assets/Tilesheets/iso_tileset.tres" id="1_4ln8h"]
 [ext_resource type="Script" uid="uid://cmsmwbfp3jjdc" path="res://Scripts/combat.gd" id="1_ut0kg"]
-[ext_resource type="Script" uid="uid://h6s7a1ct4fnu" path="res://Scripts/HoverGrid.gd" id="3_ut0kg"]
+[ext_resource type="Script" uid="uid://h6s7a1ct4fnu" path="res://Scripts/hover_grid.gd" id="3_ut0kg"]
 [ext_resource type="PackedScene" uid="uid://od74nstxu6e0" path="res://Scenes/button.tscn" id="6_yt1oa"]
 [ext_resource type="Texture2D" uid="uid://b2n3w6887iibc" path="res://Assets/Icons/boots.png" id="7_3w34b"]
 [ext_resource type="Texture2D" uid="uid://02n5p3mhbd40" path="res://Assets/Icons/gloves.png" id="8_avwh6"]

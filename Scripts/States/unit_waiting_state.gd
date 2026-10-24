@@ -1,4 +1,5 @@
-extends "res://scripts/states/state.gd"
+extends State
+class_name UnitWaitingState
 
 func enter(unit: Node) -> void:
 	# Called when the unit enters the waiting state

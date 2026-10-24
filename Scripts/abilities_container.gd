@@ -1,7 +1,8 @@
 extends Node2D
 
+const ABILITY_BUTTON_SCENE := preload("res://Scenes/ability_button.tscn")
+
 @onready var ability_container = $VBoxContainer
-@onready var ability_button_scene: PackedScene = preload("res://Scenes/ability_button.tscn")
 
 func update_abilities(unit):
 	# Clear existing ability buttons
@@ -10,7 +11,7 @@ func update_abilities(unit):
 
 	if unit.data.abilities.size() > 0:
 		for i in range(unit.data.abilities.size()):
-			var ability_button := ability_button_scene.instantiate() as AbilityButton
+			var ability_button := ABILITY_BUTTON_SCENE.instantiate() as AbilityButton
 			ability_button.data = unit.data.abilities[i]
 			var label = ability_button.get_node('Name')
 			var icon = ability_button.get_node('ButtonIcon')
