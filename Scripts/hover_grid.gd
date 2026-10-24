@@ -1,8 +1,6 @@
 extends Node2D
 class_name HoverGrid
 
-@onready var CombatScene = get_tree().get_current_scene().get_node("Combat")
-
 signal clicked(visual_cell: Vector2i)
 
 const HOVER_COLOUR := Color(1, 0, 0)
@@ -12,6 +10,7 @@ const FILL_ALPHA := 0.25
 const OUTLINE_WIDTH := 2
 
 var hover_cell := Vector2i.ZERO
+var movement_hover := false # Set by Combat; shows the hover tile in the movement colour
 
 var overlay_path: Array[Vector2i] = [] # Grid cells
 var overlay_distance := 0
@@ -64,7 +63,7 @@ func _draw():
 		return
 
 	# Current mouse hover: blue while moving, red otherwise
-	if CombatScene.action == 'movement':
+	if movement_hover:
 		_draw_tile(hover_cell, MOVEMENT_HOVER_COLOUR)
 	else:
 		_draw_tile(hover_cell, HOVER_COLOUR)

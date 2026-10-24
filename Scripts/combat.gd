@@ -2,7 +2,6 @@ extends Node2D
 @onready var tilemap_node := $Grid
 @onready var hover_grid : HoverGrid = $HoverGrid
 @onready var obstacles_tilemap := $"Grid/Obstacles"
-@onready var move_button := $MoveButton
 @onready var abilities_container := $Abilities
 
 const UNIT_SCENE := preload("res://Scenes/unit.tscn")
@@ -18,9 +17,22 @@ var movement_speed = walk_speed
 var default_movement_ap_cost = 0
 var current_movement_ap_cost = default_movement_ap_cost
 
-var action = ''
+# Move, Attack and ability buttons share this group so only one is ever pressed;
+# pressing another unpresses (and fires toggled(false) on) the previous one first
+var action_button_group := ButtonGroup.new()
+
+var action = '':
+	set(value):
+		action = value
+		hover_grid.movement_hover = value == 'movement'
 
 func _ready() -> void:
+	action_button_group.allow_unpress = true
+	$MoveButton.button_group = action_button_group
+	$AttackButton.button_group = action_button_group
+	abilities_container.button_group = action_button_group
+	abilities_container.ability_toggled.connect(_on_ability_toggled)
+
 	# For multiple units, use unit position (0/1,0/1 stored on unit stats storage)
 	var start_square = Vector2i(GameConfig.grid_width - 1, GameConfig.grid_height - 1)
 	var units = SaveManager.data.units
@@ -53,8 +65,7 @@ func _ready() -> void:
 # The unit has already reset its own AP/moves/attack in Unit.start_turn
 func _on_turn_started(unit) -> void:
 	current_unit = unit
-	unpress_action_buttons()
-	unpress_ability_buttons()
+	clear_selected_action()
 	abilities_container.update_abilities(current_unit)
 	refresh_ui()
 
@@ -139,8 +150,6 @@ func draw_traversable_path(unit):
 
 func move_to(unit, destination, speed, distance_cap: int = -1):
 	action = ''
-	if move_button.is_pressed():
-		move_button.set_pressed(false)
 
 	var destination_local_pos = Utils.cell_to_local(Vector2i(destination))
 	var destination_grid_pos = tilemap_node.position + destination_local_pos
@@ -162,19 +171,17 @@ func move_to(unit, destination, speed, distance_cap: int = -1):
 		tween_along_path(unit, path, 0.4, distance_cap)
 	
 	unit.update_ap(current_movement_ap_cost*-1)
-	# Ends any active ability (e.g. Teleport) now that the move is done
-	unpress_ability_buttons()
+	# Ends Move or any active ability (e.g. Teleport) now that the move is done.
+	# Must come after the AP cost above, as Teleport's toggle-off resets the cost
+	clear_selected_action()
 	movement_speed = walk_speed
 	current_movement_ap_cost = default_movement_ap_cost
 
-func unpress_ability_buttons(except: Node = null):
-	for ability_button in abilities_container.ability_container.get_children():
-		if ability_button != except:
-			ability_button.set_pressed(false)
-
-func unpress_action_buttons():
-	$MoveButton.set_pressed(false)
-	$AttackButton.set_pressed(false)
+# Unpresses whichever Move/Attack/ability button is active, if any
+func clear_selected_action():
+	var pressed_button = action_button_group.get_pressed_button()
+	if pressed_button != null:
+		pressed_button.set_pressed(false)
 
 func _on_grid_clicked(visual_cell: Vector2i):
 	if visual_cell == Vector2i(-1, -1):
@@ -235,7 +242,7 @@ func attack(attack_tile: Vector2i):
 		return
 
 	attack_tile_unit.process_damage(current_unit.data.base_attack_damage, current_unit)
-	$AttackButton.set_pressed(false)
+	clear_selected_action()
 	current_unit.has_attacked = true
 
 func _on_end_turn_pressed() -> void:
@@ -243,8 +250,6 @@ func _on_end_turn_pressed() -> void:
 
 func _on_move_button_toggled(toggled_on: bool) -> void:
 	if toggled_on == true:
-		unpress_ability_buttons()
-		$AttackButton.set_pressed(false)
 		action = 'movement'
 		hover_grid.overlay_distance = current_unit.current_moves
 	else:
@@ -252,12 +257,18 @@ func _on_move_button_toggled(toggled_on: bool) -> void:
 
 func _on_attack_button_toggled(toggled_on: bool) -> void:
 	if toggled_on == true:
-		unpress_ability_buttons()
-		$MoveButton.set_pressed(false)
 		action = 'attack'
 		hover_grid.overlay_distance = current_unit.data.base_attack_range
 	else:
 		action = ''
+
+func _on_ability_toggled(ability_button: AbilityButton, _toggled_on: bool) -> void:
+	var ability = ability_button.data
+	if ability.ability_script != null:
+		var ability_script_instance = ability.ability_script.new()
+
+		if ability_script_instance != null:
+			ability_script_instance.execute(ability, ability_button, self)
 
 
 # Tooltip Signals

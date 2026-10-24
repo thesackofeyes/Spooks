@@ -2,7 +2,11 @@ extends Node2D
 
 const ABILITY_BUTTON_SCENE := preload("res://Scenes/ability_button.tscn")
 
+signal ability_toggled(ability_button, toggled_on)
+
 @onready var ability_container = $VBoxContainer
+
+var button_group: ButtonGroup # Set by Combat so ability buttons share it with Move/Attack
 
 # Rebuilds the buttons for a unit's abilities; called at the start of each turn
 func update_abilities(unit):
@@ -14,6 +18,8 @@ func update_abilities(unit):
 		for i in range(unit.data.abilities.size()):
 			var ability_button := ABILITY_BUTTON_SCENE.instantiate() as AbilityButton
 			ability_button.data = unit.data.abilities[i]
+			ability_button.button_group = button_group
+			ability_button.ability_toggled.connect(ability_toggled.emit)
 			var label = ability_button.get_node('Name')
 			var icon = ability_button.get_node('ButtonIcon')
 			label.text = unit.data.abilities[i].name
