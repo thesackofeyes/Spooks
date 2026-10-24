@@ -5,6 +5,10 @@ extends Node2D
 @onready var abilities_container := $Abilities
 
 const UNIT_SCENE := preload("res://Scenes/unit.tscn")
+const MOVE_ABILITY := preload("res://Abilities/move.tres")
+const ATTACK_ABILITY := preload("res://Abilities/iron_sword.tres")
+
+const WALK_STEP_DURATION := 0.4
 
 var all_units: Array = []
 var player_units: Array = []
@@ -12,19 +16,13 @@ var enemy_units: Array = []
 
 var current_unit
 
-var walk_speed = 1.1
-var movement_speed = walk_speed
-var default_movement_ap_cost = 0
-var current_movement_ap_cost = default_movement_ap_cost
-
 # Move, Attack and ability buttons share this group so only one is ever pressed;
 # pressing another unpresses (and fires toggled(false) on) the previous one first
 var action_button_group := ButtonGroup.new()
 
-var action = '':
-	set(value):
-		action = value
-		hover_grid.movement_hover = value == 'movement'
+# The selected action (Move, Attack or an ability) and the button that selected it
+var active_effect: AbilityEffect = null
+var active_button: BaseButton = null
 
 func _ready() -> void:
 	action_button_group.allow_unpress = true
@@ -36,11 +34,11 @@ func _ready() -> void:
 	# For multiple units, use unit position (0/1,0/1 stored on unit stats storage)
 	var start_square = Vector2i(GameConfig.grid_width - 1, GameConfig.grid_height - 1)
 	var units = SaveManager.data.units
-	
+
 	for unit in units:
 		var new_unit := UNIT_SCENE.instantiate() as Unit
 		new_unit.data = unit
-		
+
 		if new_unit.data.player_unit:
 			player_units.append(new_unit)
 		else:
@@ -54,8 +52,7 @@ func _ready() -> void:
 
 		print("Placing unit ", new_unit.data.unit_class, new_unit.data.unit_subclass, " at start position: ", new_unit.data.start_position)
 
-		var new_unit_start = start_square - new_unit.data.start_position
-		move_to(new_unit, new_unit_start, 0)
+		place_unit(new_unit, start_square - new_unit.data.start_position)
 
 	TurnManager.turn_started.connect(_on_turn_started)
 	TurnManager.start_battle(all_units)
@@ -100,7 +97,24 @@ func refresh_ui() -> void:
 
 func _process(_delta: float) -> void:
 	# Follows the mouse, so this one does need to run every frame
-	draw_traversable_path(current_unit)
+	update_hover_preview()
+
+# Colours the hover tile and preview from the selected action:
+# its own colour when the hovered target is valid, red when it isn't
+func update_hover_preview() -> void:
+	var cell = hover_grid.hover_cell
+	if active_effect == null or cell == Vector2i(-1, -1):
+		hover_grid.hover_colour = HoverGrid.DEFAULT_HOVER_COLOUR
+		hover_grid.set_overlay_path([])
+		return
+
+	if active_effect.validate_target(cell) != "":
+		hover_grid.hover_colour = AbilityEffect.INVALID_COLOUR
+		hover_grid.overlay_colour = AbilityEffect.INVALID_COLOUR
+	else:
+		hover_grid.hover_colour = active_effect.get_hover_colour(cell)
+		hover_grid.overlay_colour = active_effect.colour
+	hover_grid.set_overlay_path(active_effect.get_preview_cells(cell))
 
 # Corpses are excluded so they don't block pathfinding or get targeted
 func get_living_units() -> Array:
@@ -138,44 +152,21 @@ func check_combat_end_conditions():
 	if enemy_units.all(func(unit): return unit.is_defeated()):
 		print("All enemy units defeated. Victory!")
 
-func draw_traversable_path(unit):
-	if action == 'movement' and movement_speed > 0:
-		var path = Pathfinding.astar_find_path(tilemap_node, obstacles_tilemap, unit.position, hover_grid.hover_cell, get_living_units())
-		hover_grid.set_overlay_path(path.map(func(cell): return Utils.tilemap_cell_to_grid_cell(tilemap_node, cell)))
-	elif action == 'attack':
-		# Show the straight line the attack travels along, rather than a walking path
-		hover_grid.set_overlay_path(Utils.get_line_cells(unit.get_cell(), hover_grid.hover_cell))
-	else:
-		hover_grid.overlay_distance = 0
+# Walking path from a unit to a cell, as grid cells starting with the unit's own.
+# Unreachable cells give the path to the closest reachable one
+func find_walk_path(unit, cell: Vector2i) -> Array:
+	var path = Pathfinding.astar_find_path(tilemap_node, obstacles_tilemap, unit.position, cell, get_living_units())
+	return path.map(func(tilemap_cell): return Utils.tilemap_cell_to_grid_cell(tilemap_node, tilemap_cell))
 
-func move_to(unit, destination, speed, distance_cap: int = -1):
-	action = ''
+# Instantly puts a unit on a cell (spawning, teleporting)
+func place_unit(unit, cell: Vector2i) -> void:
+	unit.position = tilemap_node.position + Utils.cell_to_local(cell)
 
-	var destination_local_pos = Utils.cell_to_local(Vector2i(destination))
-	var destination_grid_pos = tilemap_node.position + destination_local_pos
-	
-	# Teleport
-	if speed == 0:
-		var tween := create_tween()
-		tween.tween_property(unit, "position", destination_grid_pos, speed)\
-		 .set_trans(Tween.TRANS_SINE)\
-		 .set_ease(Tween.EASE_IN_OUT)
-
-	#Walk
-	if speed > 0:
-		var path = Pathfinding.astar_find_path(tilemap_node, obstacles_tilemap, unit.position, destination, get_living_units())
-		var number_of_tiles_moved = path.size() - 1
-		if distance_cap < number_of_tiles_moved:
-			number_of_tiles_moved = distance_cap
-		current_unit.current_moves -= number_of_tiles_moved
-		tween_along_path(unit, path, 0.4, distance_cap)
-	
-	unit.update_ap(current_movement_ap_cost*-1)
-	# Ends Move or any active ability (e.g. Teleport) now that the move is done.
-	# Must come after the AP cost above, as Teleport's toggle-off resets the cost
-	clear_selected_action()
-	movement_speed = walk_speed
-	current_movement_ap_cost = default_movement_ap_cost
+# Walks a unit towards a cell, up to max_tiles. Returns the number of tiles moved
+func walk_unit(unit, cell: Vector2i, max_tiles: int) -> int:
+	var path = find_walk_path(unit, cell)
+	tween_along_path(unit, path, WALK_STEP_DURATION, max_tiles)
+	return clampi(path.size() - 1, 0, max_tiles)
 
 # Unpresses whichever Move/Attack/ability button is active, if any
 func clear_selected_action():
@@ -184,20 +175,21 @@ func clear_selected_action():
 		pressed_button.set_pressed(false)
 
 func _on_grid_clicked(visual_cell: Vector2i):
-	if visual_cell == Vector2i(-1, -1):
+	if visual_cell == Vector2i(-1, -1) or active_effect == null:
 		return
-	if action == 'movement':
-		# Teleport (speed 0) lands exactly on the clicked cell, so it must be free.
-		# Walking doesn't need this as pathfinding already avoids occupied cells
-		if movement_speed == 0 and not is_cell_free(visual_cell):
-			print("Cannot teleport onto an occupied tile, teleport preserved")
-			return
-		move_to(current_unit, visual_cell, movement_speed, current_unit.current_moves)
 
-	if action == 'attack':
-		attack(visual_cell)
-		
-# Moves a unit along a path of Vector2i tiles using Tweens
+	var error = active_effect.validate_target(visual_cell)
+	if error != "":
+		print(error, ", action preserved")
+		return
+
+	# Keep a reference, as clearing the selection below drops active_effect
+	var effect = active_effect
+	effect.execute(visual_cell)
+	current_unit.update_ap(-effect.get_cost())
+	clear_selected_action()
+
+# Moves a unit along a path of grid cells using Tweens
 func tween_along_path(unit: Node2D, path: Array, speed: float, distance_cap: int, overlap: float = -0.5):
 	if path.size() == 0:
 		return
@@ -208,10 +200,9 @@ func tween_along_path(unit: Node2D, path: Array, speed: float, distance_cap: int
 	for i in range(path.size()):
 		if distance_cap != -1 and distance_cap < i:
 			break
-		
-		var cell = Utils.tilemap_cell_to_grid_cell(tilemap_node, path[i])
-		var destination = Utils.cell_to_local(cell)
-		
+
+		var destination = Utils.cell_to_local(path[i])
+
 		# Move unit to next tile
 		tween.tween_property(unit, "position", destination, speed)\
 			.set_trans(Tween.TRANS_SINE)\
@@ -220,64 +211,44 @@ func tween_along_path(unit: Node2D, path: Array, speed: float, distance_cap: int
 		# If overlap > 0, slightly reduce pause before next tween
 		if overlap > 0 and i < path.size() - 1:
 			tween.tween_interval(overlap)
-			
-func attack(attack_tile: Vector2i):
-	var attacker_cell = current_unit.get_cell()
-
-	if Utils.grid_distance(attacker_cell, attack_tile) > current_unit.data.base_attack_range:
-		print("Attacking out of range, attack action preserved")
-		return
-
-	if not has_line_of_sight(attacker_cell, attack_tile):
-		print("No line of sight to target, attack action preserved")
-		return
-
-	var attack_tile_unit = get_unit_at_cell(attack_tile)
-	if attack_tile_unit == null:
-		print("Attacking an empty tile, attack action preserved")
-		return
-
-	if current_unit.data.player_unit == attack_tile_unit.data.player_unit:
-		print("Cannot attack unit on the same side, attack action preserved")
-		return
-
-	attack_tile_unit.process_damage(current_unit.data.base_attack_damage, current_unit)
-	clear_selected_action()
-	current_unit.has_attacked = true
 
 func _on_end_turn_pressed() -> void:
 	current_unit.end_turn()
 
 func _on_move_button_toggled(toggled_on: bool) -> void:
-	if toggled_on == true:
-		action = 'movement'
-		hover_grid.overlay_distance = current_unit.current_moves
-	else:
-		action = ''
+	_on_action_toggled($MoveButton, toggled_on, MOVE_ABILITY)
 
 func _on_attack_button_toggled(toggled_on: bool) -> void:
-	if toggled_on == true:
-		action = 'attack'
-		hover_grid.overlay_distance = current_unit.data.base_attack_range
-	else:
-		action = ''
+	_on_action_toggled($AttackButton, toggled_on, ATTACK_ABILITY)
 
-func _on_ability_toggled(ability_button: AbilityButton, _toggled_on: bool) -> void:
-	var ability = ability_button.data
-	if ability.ability_script != null:
-		var ability_script_instance = ability.ability_script.new()
+func _on_ability_toggled(ability_button: AbilityButton, toggled_on: bool) -> void:
+	_on_action_toggled(ability_button, toggled_on, ability_button.data)
 
-		if ability_script_instance != null:
-			ability_script_instance.execute(ability, ability_button, self)
+# Every action button (Move, Attack, abilities) selects its effect the same way
+func _on_action_toggled(button: BaseButton, toggled_on: bool, ability: Ability) -> void:
+	if toggled_on:
+		active_button = button
+		active_effect = create_effect(ability)
+	elif button == active_button:
+		active_button = null
+		active_effect = null
+
+# Abilities without a script (e.g. Widdershins Strike for now) have no effect yet
+func create_effect(ability: Ability) -> AbilityEffect:
+	if ability.ability_script == null:
+		return null
+	var effect: AbilityEffect = ability.ability_script.new()
+	effect.setup(ability, current_unit, self)
+	return effect
 
 
 # Tooltip Signals
 
 func _on_attack_button_mouse_entered() -> void:
 	TooltipManager.show_tooltip(
-		"Iron Sword",
-		"Damage: " + str(current_unit.data.base_attack_damage) 
-			+ "\nRange: " + str(current_unit.data.base_attack_range) 
+		ATTACK_ABILITY.name,
+		"Damage: " + str(current_unit.data.base_attack_damage)
+			+ "\nRange: " + str(current_unit.data.base_attack_range)
 	)
 
 func _on_attack_button_mouse_exited() -> void:
@@ -285,8 +256,8 @@ func _on_attack_button_mouse_exited() -> void:
 
 func _on_move_button_mouse_entered() -> void:
 	TooltipManager.show_tooltip(
-		"Move",
-		str(current_unit.current_moves) + " Tiles" 
+		MOVE_ABILITY.name,
+		str(current_unit.current_moves) + " Tiles"
 	)
 
 func _on_move_button_mouse_exited() -> void:

@@ -3,17 +3,16 @@ class_name HoverGrid
 
 signal clicked(visual_cell: Vector2i)
 
-const HOVER_COLOUR := Color(1, 0, 0)
-const MOVEMENT_HOVER_COLOUR := Color(0, 0, 1)
-const PATH_COLOUR := Color(1, 1, 0)
+const DEFAULT_HOVER_COLOUR := Color(1, 1, 1) # No action selected
 const FILL_ALPHA := 0.25
 const OUTLINE_WIDTH := 2
 
 var hover_cell := Vector2i.ZERO
-var movement_hover := false # Set by Combat; shows the hover tile in the movement colour
 
+# Set by Combat from the selected action and whether the hovered target is valid
+var hover_colour := DEFAULT_HOVER_COLOUR
+var overlay_colour := DEFAULT_HOVER_COLOUR
 var overlay_path: Array[Vector2i] = [] # Grid cells
-var overlay_distance := 0
 
 func _ready():
 	z_index = 100 # Always draw on top
@@ -62,18 +61,12 @@ func _draw():
 	if hover_cell == Vector2i(-1, -1):
 		return
 
-	# Current mouse hover: blue while moving, red otherwise
-	if movement_hover:
-		_draw_tile(hover_cell, MOVEMENT_HOVER_COLOUR)
-	else:
-		_draw_tile(hover_cell, HOVER_COLOUR)
+	# Movement path / attack line. Skips the hovered cell so its colour isn't blended
+	for cell in overlay_path:
+		if cell != hover_cell:
+			_draw_tile(cell, overlay_colour)
 
-	# Movement path / attack line
-	if overlay_distance > 0:
-		for i in range(overlay_path.size()):
-			if i > overlay_distance:
-				break
-			_draw_tile(overlay_path[i], PATH_COLOUR)
+	_draw_tile(hover_cell, hover_colour)
 
 func _unhandled_input(event):
 	if event is InputEventMouseButton and event.pressed:

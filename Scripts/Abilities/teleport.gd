@@ -1,15 +1,17 @@
-# RefCounted rather than Node: a new instance is made on every toggle and is
-# never added to the tree, so it needs to free itself once unused
-extends RefCounted
+# Instantly moves the caster to any unoccupied tile
+extends AbilityEffect
 
-func execute(ability, ability_button, combat_scene):
-	if ability_button.button_pressed:
-		combat_scene.action = 'movement'
-		combat_scene.movement_speed = 0
-		combat_scene.current_movement_ap_cost = ability.cost
-		combat_scene.hover_grid.overlay_distance = 100
-	else:
-		combat_scene.action = ''
-		combat_scene.movement_speed = combat_scene.walk_speed
-		combat_scene.hover_grid.overlay_distance = 0
-		combat_scene.current_movement_ap_cost = combat_scene.default_movement_ap_cost
+func _init() -> void:
+	colour = MOVEMENT_COLOUR
+
+# Only called for valid targets, which teleport always lands on exactly
+func get_hover_colour(_target: Vector2i) -> Color:
+	return DESTINATION_COLOUR
+
+func validate_target(target: Vector2i) -> String:
+	if not combat.is_cell_free(target):
+		return "Cannot teleport onto an occupied tile"
+	return ""
+
+func execute(target: Vector2i) -> void:
+	combat.place_unit(caster, target)
