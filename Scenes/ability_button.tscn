@@ -4,11 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://bi7p51e5pri5" path="res://Assets/UI/Button Background Landscape.png" id="2_83f4s"]
 [ext_resource type="Texture2D" uid="uid://f5o4lg4kska" path="res://Assets/Icons/ability_sprite_sheet.png" id="2_u1jq6"]
 [ext_resource type="LabelSettings" uid="uid://bd2b8umd3utg7" path="res://Assets/UI/button_labels.tres" id="3_d2bew"]
-
-[sub_resource type="Theme" id="Theme_smycg"]
-Button/colors/icon_hover_pressed_color = Color(0, 0, 0, 0.52156866)
-Button/colors/icon_normal_color = Color(1, 1, 1, 0)
-Button/colors/icon_pressed_color = Color(0, 0, 0, 0.49019608)
+[ext_resource type="Theme" uid="uid://dslmgwoqlssvo" path="res://Assets/UI/buttons_theme.tres" id="4_theme"]
 
 [node name="AbilityButton" type="Button" unique_id=2016880670]
 custom_minimum_size = Vector2(128, 96)
@@ -26,7 +22,7 @@ grow_vertical = 2
 scale = Vector2(0.75, 0.75)
 focus_mode = 0
 mouse_default_cursor_shape = 2
-theme = SubResource("Theme_smycg")
+theme = ExtResource("4_theme")
 toggle_mode = true
 icon_alignment = 1
 expand_icon = true
@@ -46,7 +42,7 @@ texture_filter = 5
 position = Vector2(64.000015, 48)
 texture = ExtResource("2_83f4s")
 
-[node name="Name" type="Label" parent="." unique_id=457752913]
+[node name="Label" type="Label" parent="." unique_id=457752913]
 layout_mode = 0
 offset_left = 9.0
 offset_top = 4.0
@@ -56,6 +52,4 @@ label_settings = ExtResource("3_d2bew")
 horizontal_alignment = 1
 autowrap_mode = 2
 
-[connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
-[connection signal="mouse_exited" from="." to="." method="_on_mouse_exited"]
 [connection signal="toggled" from="." to="." method="_on_toggled"]

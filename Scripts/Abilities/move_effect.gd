@@ -5,6 +5,9 @@ extends AbilityEffect
 func _init() -> void:
 	colour = MOVEMENT_COLOUR
 
+func get_tooltip_body() -> String:
+	return str(caster.current_moves) + " Tiles"
+
 func get_preview_cells(target: Vector2i) -> Array:
 	# Path includes the starting cell, hence + 1
 	return combat.find_walk_path(caster, target).slice(0, caster.current_moves + 1)

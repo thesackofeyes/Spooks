@@ -71,6 +71,9 @@ func process_damage(amount: int, attacker: Unit):
 	if current_hp <= 0:
 		unit_defeated(attacker)
 
+func get_display_name() -> String:
+	return "%s (%s)" % [data.unit_class, data.unit_subclass]
+
 # The grid cell this unit is standing on
 func get_cell() -> Vector2i:
 	return Utils.local_to_cell(position)

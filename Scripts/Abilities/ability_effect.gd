@@ -17,10 +17,30 @@ var combat # Combat scene, for grid queries like get_unit_at_cell or has_line_of
 # Preview colour (and default hover colour) when the target is valid
 var colour := DAMAGE_COLOUR
 
+# Effect for an ability, or null if it has no script yet (e.g. Widdershins Strike)
+static func create(p_ability: Ability, p_caster: Unit, p_combat) -> AbilityEffect:
+	if p_ability.ability_script == null:
+		return null
+	var effect: AbilityEffect = p_ability.ability_script.new()
+	effect.setup(p_ability, p_caster, p_combat)
+	return effect
+
+# For reading tooltip text only. Falls back to the base effect for abilities without a script
+static func create_for_tooltip(p_ability: Ability, p_caster: Unit) -> AbilityEffect:
+	var effect = create(p_ability, p_caster, null)
+	if effect == null:
+		effect = AbilityEffect.new()
+		effect.setup(p_ability, p_caster, null)
+	return effect
+
 func setup(p_ability: Ability, p_caster: Unit, p_combat) -> void:
 	ability = p_ability
 	caster = p_caster
 	combat = p_combat
+
+# Tooltip body for this action's button. Title is the ability name
+func get_tooltip_body() -> String:
+	return ability.description + "\nCost: " + str(get_cost())
 
 # Grid cells to highlight while hovering a target, already capped to range. [] for none
 func get_preview_cells(_target: Vector2i) -> Array:

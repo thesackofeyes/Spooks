@@ -1,6 +1,18 @@
 Abilities
 	- Cast Abilities
 		- Salt and Iron
+			Note: Add Scripts/Abilities/salt_and_iron.gd (extends AbilityEffect) and Abilities/salt_and_iron.tres
+			      with ability_script set, then add it to a unit's abilities. No Combat changes needed.
+			      attack_effect.gd is a good reference (range, line of sight, target checks).
+			      Use ability.damage / ability.ability_range from the .tres; cost is charged automatically.
+		- Widdershins Strike
+			Note: Has no ability_script yet, so selecting it does nothing (white hover).
+			      Costs 8 AP but the Spook has 5 stamina, so it's only usable after banking AP for a turn.
+	- Per-unit basic attacks
+		Note: Attack is the shared Iron Sword (Abilities/iron_sword.tres); damage/range come from each unit's
+		      base_attack_damage / base_attack_range. Could add an attack ability field to UnitData so e.g. the
+		      Witch (range 5) has her own named attack.
+	- Teleport has no range limit (ability_range unused); teleport.tres has an unused damage = 5
 
 Units
 	Enemies
@@ -9,11 +21,36 @@ Units
 			- Portrait
 			- HP
 			- Flavour Text
+			Note: Hover detection is done - Combat.update_hovered_unit / show_unit_info shows a tooltip with
+			      Unit.get_display_name() and live HP. Next: add name / flavour text fields to UnitData, and
+			      reuse CharacterPortrait.update_portrait(unit) (already takes any unit) for a richer panel.
+		- Enemy AI
+			Note: Enemy turns currently need End Turn clicking. Hook point is TurnManager.start_turn
+			      ("trigger AI behavior here"). The Idle/Acting/Waiting states are scaffolding for this.
+			      AI can reuse AbilityEffect validate_target / execute, Combat.find_walk_path,
+			      get_unit_at_cell, has_line_of_sight and Utils.grid_distance.
+			      Hidden EndTurn / portrait lines for enemy turns are commented out in Combat.refresh_ui.
+
+Combat
+	- Victory / Game Over
+		Note: Combat.check_combat_end_conditions only prints; nothing ends the battle yet.
+	- Per-round effects (status effects, regen, round counter)
+		Note: TurnManager.round_started signal exists but nothing listens to it yet.
+	- AP carries over between turns (stamina is added, not reset) - kept as a banking mechanic; revisit if
+	  it becomes too strong. See Unit.start_turn.
+	- XP is added to UnitData on kills but SaveManager.save_game isn't called after combat, and in the
+	  editor the save is rebuilt from Units/*.tres every run.
 
 Visuals
 	- Update disabled state on buttons to look not shit
 		- Unique button visuals for single use actions (attack/movement)
 		- Alternate unique visuals for when not enough available AP to use ability
+		Note: Fill in GameButton._apply_visual_state() (Scripts/button.gd). States are already set:
+		      USED (Move at 0 / Attack spent), UNAFFORDABLE (not enough AP), UNAVAILABLE (enemy turn).
+	- Hover colours: white = no action, yellow = movement path, blue = valid movement destination,
+	  black = attack, red = invalid. Colours live in AbilityEffect / HoverGrid constants.
+		Note: Move to an unreachable tile is yellow (walks as far as it can) rather than red - change in
+		      MoveEffect.validate_target if it should be invalid instead.
 
 
 
@@ -23,4 +60,5 @@ General Ideation:
 			-	Charming (Skill based - result in future benefits?)
 			-	Diplomacy (Skill based)
 			-	Stealth (X turns without being in enemy range)
-			
+				Note: TurnManager.round_started + Utils.grid_distance / Combat.has_line_of_sight cover the checks.
+

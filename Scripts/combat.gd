@@ -22,12 +22,16 @@ var action_button_group := ButtonGroup.new()
 
 # The selected action (Move, Attack or an ability) and the button that selected it
 var active_effect: AbilityEffect = null
-var active_button: BaseButton = null
+var active_button: GameButton = null
+
+var hovered_unit = null # Living unit under the mouse, for its info tooltip
 
 func _ready() -> void:
 	action_button_group.allow_unpress = true
 	$MoveButton.button_group = action_button_group
 	$AttackButton.button_group = action_button_group
+	$MoveButton.ability = MOVE_ABILITY
+	$AttackButton.ability = ATTACK_ABILITY
 	abilities_container.button_group = action_button_group
 	abilities_container.ability_toggled.connect(_on_ability_toggled)
 
@@ -63,12 +67,16 @@ func _ready() -> void:
 func _on_turn_started(unit) -> void:
 	current_unit = unit
 	clear_selected_action()
+	$MoveButton.unit = current_unit
+	$AttackButton.unit = current_unit
 	abilities_container.update_abilities(current_unit)
 	refresh_ui()
 
 func _on_unit_stats_changed(unit) -> void:
 	if unit == current_unit:
 		refresh_ui()
+	if unit == hovered_unit:
+		show_unit_info(unit)
 
 func _on_unit_defeated(_unit, _attacker) -> void:
 	check_combat_end_conditions()
@@ -81,23 +89,44 @@ func refresh_ui() -> void:
 
 	if current_unit.data.player_unit == false:
 		# Disable Movement/Attack buttons during enemy turns
-		$MoveButton.disabled = true
-		$AttackButton.disabled = true
+		$MoveButton.set_visual_state(GameButton.VisualState.UNAVAILABLE)
+		$AttackButton.set_visual_state(GameButton.VisualState.UNAVAILABLE)
 		# Uncomment after debug/enemy AI added:
 		#$EndTurn.visible = false
 		#$CharacterPortrait.visible = false
 	else:
 		$EndTurn.visible = true
 		#$CharacterPortrait.visible = true
-		$MoveButton.disabled = current_unit.current_moves <= 0
-		$AttackButton.disabled = current_unit.has_attacked
+		$MoveButton.set_visual_state(GameButton.VisualState.USED if current_unit.current_moves <= 0 else GameButton.VisualState.AVAILABLE)
+		$AttackButton.set_visual_state(GameButton.VisualState.USED if current_unit.has_attacked else GameButton.VisualState.AVAILABLE)
 
 	abilities_container.refresh_affordability(current_unit)
-	$CharacterPortrait.update_portrait(current_unit.current_hp, current_unit.current_ap, current_unit.current_moves, Vector2i(current_unit.data.hero_sprite_x, current_unit.data.hero_sprite_y))
+	$CharacterPortrait.update_portrait(current_unit)
 
 func _process(_delta: float) -> void:
-	# Follows the mouse, so this one does need to run every frame
+	# Both follow the mouse, so these do need to run every frame
 	update_hover_preview()
+	update_hovered_unit()
+
+# Shows a tooltip for the living unit under the mouse (groundwork for enemy info)
+func update_hovered_unit() -> void:
+	# While over UI, buttons own the tooltip
+	if get_viewport().gui_get_hovered_control() != null:
+		hovered_unit = null
+		return
+
+	var unit = get_unit_at_cell(hover_grid.hover_cell)
+	if unit == hovered_unit:
+		return
+
+	hovered_unit = unit
+	if unit != null:
+		show_unit_info(unit)
+	else:
+		TooltipManager.hide_tooltip()
+
+func show_unit_info(unit) -> void:
+	TooltipManager.show_tooltip(unit.get_display_name(), "HP: %d/%d" % [unit.current_hp, unit.data.base_hp])
 
 # Colours the hover tile and preview from the selected action:
 # its own colour when the hovered target is valid, red when it isn't
@@ -216,49 +245,20 @@ func _on_end_turn_pressed() -> void:
 	current_unit.end_turn()
 
 func _on_move_button_toggled(toggled_on: bool) -> void:
-	_on_action_toggled($MoveButton, toggled_on, MOVE_ABILITY)
+	_on_action_toggled($MoveButton, toggled_on)
 
 func _on_attack_button_toggled(toggled_on: bool) -> void:
-	_on_action_toggled($AttackButton, toggled_on, ATTACK_ABILITY)
+	_on_action_toggled($AttackButton, toggled_on)
 
 func _on_ability_toggled(ability_button: AbilityButton, toggled_on: bool) -> void:
-	_on_action_toggled(ability_button, toggled_on, ability_button.data)
+	_on_action_toggled(ability_button, toggled_on)
 
-# Every action button (Move, Attack, abilities) selects its effect the same way
-func _on_action_toggled(button: BaseButton, toggled_on: bool, ability: Ability) -> void:
+# Every action button (Move, Attack, abilities) selects its effect the same way.
+# Abilities without a script (e.g. Widdershins Strike for now) give no effect
+func _on_action_toggled(button: GameButton, toggled_on: bool) -> void:
 	if toggled_on:
 		active_button = button
-		active_effect = create_effect(ability)
+		active_effect = AbilityEffect.create(button.ability, current_unit, self)
 	elif button == active_button:
 		active_button = null
 		active_effect = null
-
-# Abilities without a script (e.g. Widdershins Strike for now) have no effect yet
-func create_effect(ability: Ability) -> AbilityEffect:
-	if ability.ability_script == null:
-		return null
-	var effect: AbilityEffect = ability.ability_script.new()
-	effect.setup(ability, current_unit, self)
-	return effect
-
-
-# Tooltip Signals
-
-func _on_attack_button_mouse_entered() -> void:
-	TooltipManager.show_tooltip(
-		ATTACK_ABILITY.name,
-		"Damage: " + str(current_unit.data.base_attack_damage)
-			+ "\nRange: " + str(current_unit.data.base_attack_range)
-	)
-
-func _on_attack_button_mouse_exited() -> void:
-	TooltipManager.hide_tooltip()
-
-func _on_move_button_mouse_entered() -> void:
-	TooltipManager.show_tooltip(
-		MOVE_ABILITY.name,
-		str(current_unit.current_moves) + " Tiles"
-	)
-
-func _on_move_button_mouse_exited() -> void:
-	TooltipManager.hide_tooltip()

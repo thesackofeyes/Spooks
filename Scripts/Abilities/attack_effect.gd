@@ -11,6 +11,9 @@ func get_range() -> int:
 func get_damage() -> int:
 	return caster.data.base_attack_damage
 
+func get_tooltip_body() -> String:
+	return "Damage: " + str(get_damage()) + "\nRange: " + str(get_range())
+
 func get_preview_cells(target: Vector2i) -> Array:
 	# Line includes the caster's cell, hence + 1
 	return Utils.get_line_cells(caster.get_cell(), target).slice(0, get_range() + 1)

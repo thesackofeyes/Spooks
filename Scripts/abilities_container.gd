@@ -14,22 +14,19 @@ func update_abilities(unit):
 	for child in ability_container.get_children():
 		child.queue_free()
 
-	if unit.data.abilities.size() > 0:
-		for i in range(unit.data.abilities.size()):
-			var ability_button := ABILITY_BUTTON_SCENE.instantiate() as AbilityButton
-			ability_button.data = unit.data.abilities[i]
-			ability_button.button_group = button_group
-			ability_button.ability_toggled.connect(ability_toggled.emit)
-			var label = ability_button.get_node('Name')
-			var icon = ability_button.get_node('ButtonIcon')
-			label.text = unit.data.abilities[i].name
-			icon.frame_coords = Vector2i(unit.data.abilities[i].icon_x, unit.data.abilities[i].icon_y)
-
-			ability_container.add_child(ability_button)
+	for ability in unit.data.abilities:
+		var ability_button := ABILITY_BUTTON_SCENE.instantiate() as AbilityButton
+		ability_button.setup(ability, unit)
+		ability_button.button_group = button_group
+		ability_button.ability_toggled.connect(ability_toggled.emit)
+		ability_container.add_child(ability_button)
 
 	refresh_affordability(unit)
 
-# Disables buttons for abilities the unit can't currently afford
+# Marks buttons for abilities the unit can't currently afford
 func refresh_affordability(unit):
 	for ability_button in ability_container.get_children():
-		ability_button.disabled = ability_button.data.cost > unit.current_ap
+		if ability_button.ability.cost > unit.current_ap:
+			ability_button.set_visual_state(GameButton.VisualState.UNAFFORDABLE)
+		else:
+			ability_button.set_visual_state(GameButton.VisualState.AVAILABLE)

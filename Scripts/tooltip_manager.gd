@@ -2,6 +2,9 @@ extends CanvasLayer
 
 const TOOLTIP_SCENE := preload("res://Scenes/tooltip.tscn")
 
+# Keeps the tooltip from sitting directly under the mouse cursor
+const MOUSE_OFFSET := Vector2(16, 16)
+
 var tooltip_instance: Control
 
 func _ready():
@@ -11,18 +14,18 @@ func _ready():
 
 func _process(_delta):
 	if tooltip_instance.visible:
-	# offset by 16px on both axes to prevent tooltip from being directly under the mouse cursor
-		var position = get_viewport().get_mouse_position() + Vector2(16, 16)
-		tooltip_instance.set_global_position(position)
+		tooltip_instance.set_global_position(_get_tooltip_position())
 
 func show_tooltip(title: String, body: String):
 	tooltip_instance.set_content(title, body)
-
-
-	# Set tooltip to follow mouse position
-	var position = get_viewport().get_mouse_position()
-	
-	tooltip_instance.show_at_position(position)
+	# Same position as _process uses, so it doesn't jump on the next frame
+	tooltip_instance.show_at_position(_get_tooltip_position())
 
 func hide_tooltip():
 	tooltip_instance.hide()
+
+func is_showing() -> bool:
+	return tooltip_instance.visible
+
+func _get_tooltip_position() -> Vector2:
+	return get_viewport().get_mouse_position() + MOUSE_OFFSET
