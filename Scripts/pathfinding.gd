@@ -8,7 +8,7 @@ extends Node
 # Main function
 func astar_find_path(tilemap: TileMapLayer, obstacle_tilemap: TileMapLayer, start: Vector2i, goal: Vector2i, units: Array) -> Array[Vector2i]:
 	start = Utils.tilemap_local_to_cell(tilemap, start)
-	goal = Utils.tilemap_local_to_cell(tilemap, Utils.cell_to_local(goal))
+	goal = Utils.grid_cell_to_tilemap_cell(tilemap, goal)
 	
 	var open_set: Array[Vector2i] = [start]
 	var closed_set: Dictionary = {} # Vector2i -> bool

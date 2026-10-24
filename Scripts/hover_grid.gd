@@ -1,15 +1,19 @@
 extends Node2D
 class_name HoverGrid
 
-@onready var tilemap_node := $"../Grid"
-@onready var obstacles_tilemap := $"../Grid/Obstacles"
 @onready var CombatScene = get_tree().get_current_scene().get_node("Combat")
 
 signal clicked(visual_cell: Vector2i)
 
+const HOVER_COLOUR := Color(1, 0, 0)
+const MOVEMENT_HOVER_COLOUR := Color(0, 0, 1)
+const PATH_COLOUR := Color(1, 1, 0)
+const FILL_ALPHA := 0.25
+const OUTLINE_WIDTH := 2
+
 var hover_cell := Vector2i.ZERO
 
-var overlay_path: Array[Vector2i] = []
+var overlay_path: Array[Vector2i] = [] # Grid cells
 var overlay_distance := 0
 
 func _ready():
@@ -36,58 +40,41 @@ func get_mouse_cell() -> Vector2i:
 
 	return Vector2i(x, y)
 
-func set_overlay_path(p: Array) -> void:
-	overlay_path.clear()
-	
-	for cell in p:
-		overlay_path.append(Utils.local_to_cell(Utils.tilemap_cell_to_local(tilemap_node, cell)))
-		
+# Takes grid cells; callers convert from tilemap cells first
+func set_overlay_path(cells: Array) -> void:
+	overlay_path.assign(cells)
 	queue_redraw()
 
-func _draw():
-	#Draw Current Mouse Hover
-	if hover_cell == Vector2i(-1, -1):
-		return
-		
+# Draws a translucent diamond with a solid outline over a grid cell
+func _draw_tile(cell: Vector2i, colour: Color) -> void:
 	var half = GameConfig.tile_size / 2
-	var origin = Utils.cell_to_local(hover_cell)
-
-	var points = [
+	var origin = Utils.cell_to_local(cell)
+	var points = PackedVector2Array([
 		origin + Vector2(0, -half.y),
 		origin + Vector2(half.x, 0),
 		origin + Vector2(0, half.y),
-		origin + Vector2(-half.x, 0)
-	]
+		origin + Vector2(-half.x, 0),
+	])
 
-	
-	# Draw red diamond for current hover cell
-	# If combat_scene.action is 'movement' make this blue
+	draw_colored_polygon(points, Color(colour, FILL_ALPHA))
+	draw_polyline(points + PackedVector2Array([points[0]]), colour, OUTLINE_WIDTH)
 
+func _draw():
+	if hover_cell == Vector2i(-1, -1):
+		return
+
+	# Current mouse hover: blue while moving, red otherwise
 	if CombatScene.action == 'movement':
-		draw_colored_polygon(points, Color(0, 0, 1, 0.25))
-		draw_polyline(points + [points[0]], Color(0, 0, 1), 2)
+		_draw_tile(hover_cell, MOVEMENT_HOVER_COLOUR)
 	else:
-		draw_colored_polygon(points, Color(1, 0, 0, 0.25))
-		draw_polyline(points + [points[0]], Color(1, 0, 0), 2)
-	#End Draw Current Mouse Hover
-	
-	#Draw Movement Path
+		_draw_tile(hover_cell, HOVER_COLOUR)
+
+	# Movement path / attack line
 	if overlay_distance > 0:
 		for i in range(overlay_path.size()):
 			if i > overlay_distance:
 				break
-			
-			var destination = Utils.cell_to_local(overlay_path[i])
-			points = [
-				destination + Vector2(0, -half.y),
-				destination + Vector2(half.x, 0),
-				destination + Vector2(0, half.y),
-				destination + Vector2(-half.x, 0)
-			]
-			
-			draw_colored_polygon(points, Color(1, 1, 0, 0.25))
-			draw_polyline(points + [points[0]], Color(1, 1, 0), 2)
-	#End Draw Movement Path
+			_draw_tile(overlay_path[i], PATH_COLOUR)
 
 func _unhandled_input(event):
 	if event is InputEventMouseButton and event.pressed:

@@ -21,6 +21,9 @@ func tilemap_cell_to_local(tilemap: TileMapLayer, cell: Vector2i) -> Vector2:
 func grid_cell_to_tilemap_cell(tilemap: TileMapLayer, cell: Vector2i) -> Vector2i:
 	return tilemap_local_to_cell(tilemap, cell_to_local(cell))
 
+func tilemap_cell_to_grid_cell(tilemap: TileMapLayer, cell: Vector2i) -> Vector2i:
+	return local_to_cell(tilemap_cell_to_local(tilemap, cell))
+
 # Tile distance on a 4-directional grid (Manhattan)
 func grid_distance(a: Vector2i, b: Vector2i) -> int:
 	return abs(a.x - b.x) + abs(a.y - b.y)

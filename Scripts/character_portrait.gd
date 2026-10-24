@@ -16,5 +16,4 @@ func update_moves(moves):
 	$Moves/Label.text = str(moves)
 
 func update_hero_image(image_frames: Vector2i):
-	var hframes = $Portrait.hframes
-	$Portrait.frame = image_frames.y * hframes + image_frames.x
+	$Portrait.frame_coords = image_frames

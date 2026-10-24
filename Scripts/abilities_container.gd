@@ -16,7 +16,7 @@ func update_abilities(unit):
 			var label = ability_button.get_node('Name')
 			var icon = ability_button.get_node('ButtonIcon')
 			label.text = unit.data.abilities[i].name
-			icon.frame = unit.data.abilities[i].icon_y * icon.hframes + unit.data.abilities[i].icon_x
+			icon.frame_coords = Vector2i(unit.data.abilities[i].icon_x, unit.data.abilities[i].icon_y)
 
 			if unit.data.abilities[i].cost > unit.current_ap:
 				ability_button.disabled = true

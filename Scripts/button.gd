@@ -19,7 +19,7 @@ func _ready() -> void:
 		sprite.texture = icon_sheet
 		sprite.hframes = hframes
 		sprite.vframes = vframes
-		sprite.frame = icon_y * hframes + icon_x
+		sprite.frame_coords = Vector2i(icon_x, icon_y)
 	
 	if label_text != "" and label != null:
 		label.text = label_text

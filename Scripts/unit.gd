@@ -19,7 +19,7 @@ func _ready() -> void:
 	sprite.texture = data.sprite
 	sprite.hframes = data.sprite_h_frames if data.sprite_h_frames > 0 else 1
 	sprite.vframes = data.sprite_v_frames if data.sprite_v_frames > 0 else 1
-	sprite.frame = data.icon_y * sprite.hframes + data.icon_x
+	sprite.frame_coords = Vector2i(data.icon_x, data.icon_y)
 	sprite.scale = Vector2(data.sprite_scale, data.sprite_scale)
 	state_machine = {
 		"Idle": UnitIdleState.new(),
@@ -50,6 +50,10 @@ func process_damage(amount: int, attacker: Unit):
 
 	if current_hp <= 0:
 		unit_defeated(attacker)
+
+# The grid cell this unit is standing on
+func get_cell() -> Vector2i:
+	return Utils.local_to_cell(position)
 
 func is_defeated() -> bool:
 	return current_hp <= 0

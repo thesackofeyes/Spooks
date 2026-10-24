@@ -99,7 +99,7 @@ func get_living_units() -> Array:
 # Returns the living unit standing on a grid cell, or null
 func get_unit_at_cell(cell: Vector2i):
 	for unit in get_living_units():
-		if Utils.local_to_cell(unit.position) == cell:
+		if unit.get_cell() == cell:
 			return unit
 	return null
 
@@ -138,11 +138,11 @@ func check_combat_end_conditions():
 
 func draw_traversable_path(unit):
 	if action == 'movement' and movement_speed > 0:
-		hover_grid.set_overlay_path(Pathfinding.astar_find_path(tilemap_node, obstacles_tilemap, unit.position, hover_grid.hover_cell, unit_nodes))
+		var path = Pathfinding.astar_find_path(tilemap_node, obstacles_tilemap, unit.position, hover_grid.hover_cell, unit_nodes)
+		hover_grid.set_overlay_path(path.map(func(cell): return Utils.tilemap_cell_to_grid_cell(tilemap_node, cell)))
 	elif action == 'attack':
 		# Show the straight line the attack travels along, rather than a walking path
-		var line = Utils.get_line_cells(Utils.local_to_cell(unit.position), hover_grid.hover_cell)
-		hover_grid.set_overlay_path(line.map(func(cell): return Utils.grid_cell_to_tilemap_cell(tilemap_node, cell)))
+		hover_grid.set_overlay_path(Utils.get_line_cells(unit.get_cell(), hover_grid.hover_cell))
 	else:
 		hover_grid.overlay_distance = 0
 
@@ -209,7 +209,7 @@ func tween_along_path(unit: Node2D, path: Array, speed: float, distance_cap: int
 		if distance_cap != -1 and distance_cap < i:
 			break
 		
-		var cell = Utils.local_to_cell(Utils.tilemap_cell_to_local(tilemap_node, path[i]))
+		var cell = Utils.tilemap_cell_to_grid_cell(tilemap_node, path[i])
 		var destination = Utils.cell_to_local(cell)
 		
 		# Move unit to next tile
@@ -222,7 +222,7 @@ func tween_along_path(unit: Node2D, path: Array, speed: float, distance_cap: int
 			tween.tween_interval(overlap)
 			
 func attack(attack_tile: Vector2i):
-	var attacker_cell = Utils.local_to_cell(current_unit.position)
+	var attacker_cell = current_unit.get_cell()
 
 	if Utils.grid_distance(attacker_cell, attack_tile) > current_unit.data.base_attack_range:
 		print("Attacking out of range, attack action preserved")
