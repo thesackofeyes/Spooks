@@ -4,6 +4,7 @@ const ABILITY_BUTTON_SCENE := preload("res://Scenes/ability_button.tscn")
 
 @onready var ability_container = $VBoxContainer
 
+# Rebuilds the buttons for a unit's abilities; called at the start of each turn
 func update_abilities(unit):
 	# Clear existing ability buttons
 	for child in ability_container.get_children():
@@ -18,7 +19,11 @@ func update_abilities(unit):
 			label.text = unit.data.abilities[i].name
 			icon.frame_coords = Vector2i(unit.data.abilities[i].icon_x, unit.data.abilities[i].icon_y)
 
-			if unit.data.abilities[i].cost > unit.current_ap:
-				ability_button.disabled = true
-
 			ability_container.add_child(ability_button)
+
+	refresh_affordability(unit)
+
+# Disables buttons for abilities the unit can't currently afford
+func refresh_affordability(unit):
+	for ability_button in ability_container.get_children():
+		ability_button.disabled = ability_button.data.cost > unit.current_ap

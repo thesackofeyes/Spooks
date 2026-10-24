@@ -13,9 +13,6 @@ var enemy_units: Array = []
 
 var current_unit
 
-var has_attacked = false
-var unit_nodes
-
 var walk_speed = 1.1
 var movement_speed = walk_speed
 var default_movement_ap_cost = 0
@@ -40,58 +37,60 @@ func _ready() -> void:
 		all_units.append(new_unit)
 
 		$Units.add_child(new_unit)
+		new_unit.stats_changed.connect(_on_unit_stats_changed)
+		new_unit.defeated.connect(_on_unit_defeated)
 
 		print("Placing unit ", new_unit.data.unit_class, new_unit.data.unit_subclass, " at start position: ", new_unit.data.start_position)
-		
+
 		var new_unit_start = start_square - new_unit.data.start_position
 		move_to(new_unit, new_unit_start, 0)
-	
-	unit_nodes = get_living_units()
 
 	TurnManager.turn_started.connect(_on_turn_started)
 	TurnManager.start_battle(all_units)
 	hover_grid.clicked.connect(_on_grid_clicked)
 
-# Fires for every turn, including a unit acting twice in a row across rounds
+# Fires for every turn, including a unit acting twice in a row across rounds.
+# The unit has already reset its own AP/moves/attack in Unit.start_turn
 func _on_turn_started(unit) -> void:
 	current_unit = unit
-	# Reset button states:
-	$MoveButton.set_pressed(false)
-	$AttackButton.set_pressed(false)
-	# Reset unit stats at start of turn
-	current_unit.update_ap(current_unit.data.stamina)
-	current_unit.current_moves = current_unit.data.speed
-
+	unpress_action_buttons()
+	unpress_ability_buttons()
 	abilities_container.update_abilities(current_unit)
-	has_attacked = false
+	refresh_ui()
 
-func _process(_delta: float) -> void:
-	unit_nodes = get_living_units()
+func _on_unit_stats_changed(unit) -> void:
+	if unit == current_unit:
+		refresh_ui()
+
+func _on_unit_defeated(_unit, _attacker) -> void:
+	check_combat_end_conditions()
+
+# Syncs buttons and portrait with the current unit. Called when the turn
+# starts or the current unit's stats change, rather than every frame
+func refresh_ui() -> void:
+	if current_unit == null:
+		return
 
 	if current_unit.data.player_unit == false:
 		# Disable Movement/Attack buttons during enemy turns
 		$MoveButton.disabled = true
 		$AttackButton.disabled = true
-		# Uncomment after debug/enemy AI added: 
+		# Uncomment after debug/enemy AI added:
 		#$EndTurn.visible = false
 		#$CharacterPortrait.visible = false
 	else:
 		$EndTurn.visible = true
 		#$CharacterPortrait.visible = true
-		
-		if current_unit.current_moves > 0:
-			$MoveButton.disabled = false
-		else:
-			$MoveButton.disabled = true
-		
-		if has_attacked == true:
-			$AttackButton.disabled = true
-		else:
-			$AttackButton.disabled = false
+		$MoveButton.disabled = current_unit.current_moves <= 0
+		$AttackButton.disabled = current_unit.has_attacked
 
-	draw_traversable_path(current_unit)
+	abilities_container.refresh_affordability(current_unit)
 	$CharacterPortrait.update_portrait(current_unit.current_hp, current_unit.current_ap, current_unit.current_moves, Vector2i(current_unit.data.hero_sprite_x, current_unit.data.hero_sprite_y))
-	
+
+func _process(_delta: float) -> void:
+	# Follows the mouse, so this one does need to run every frame
+	draw_traversable_path(current_unit)
+
 # Corpses are excluded so they don't block pathfinding or get targeted
 func get_living_units() -> Array:
 	return $Units.get_children().filter(func(unit): return not unit.is_defeated())
@@ -121,24 +120,16 @@ func has_line_of_sight(from: Vector2i, to: Vector2i) -> bool:
 	return true
 
 func check_combat_end_conditions():
-	var active_player_units = 0
-	for player_unit in player_units:
-		if player_unit.current_hp > 0:
-			active_player_units += 1
-	if active_player_units == 0:
+	if player_units.all(func(unit): return unit.is_defeated()):
 		print("All player units defeated. Game Over.")
-	
-	# if no enemy units remain with hp > 0, trigger victory conditions
-	var active_enemy_units = 0
-	for enemy_unit in enemy_units:
-		if enemy_unit.current_hp > 0:
-			active_enemy_units += 1
-	if active_enemy_units == 0:
+
+	# if no enemy units remain alive, trigger victory conditions
+	if enemy_units.all(func(unit): return unit.is_defeated()):
 		print("All enemy units defeated. Victory!")
 
 func draw_traversable_path(unit):
 	if action == 'movement' and movement_speed > 0:
-		var path = Pathfinding.astar_find_path(tilemap_node, obstacles_tilemap, unit.position, hover_grid.hover_cell, unit_nodes)
+		var path = Pathfinding.astar_find_path(tilemap_node, obstacles_tilemap, unit.position, hover_grid.hover_cell, get_living_units())
 		hover_grid.set_overlay_path(path.map(func(cell): return Utils.tilemap_cell_to_grid_cell(tilemap_node, cell)))
 	elif action == 'attack':
 		# Show the straight line the attack travels along, rather than a walking path
@@ -163,7 +154,7 @@ func move_to(unit, destination, speed, distance_cap: int = -1):
 
 	#Walk
 	if speed > 0:
-		var path = Pathfinding.astar_find_path(tilemap_node, obstacles_tilemap, unit.position, destination, unit_nodes)
+		var path = Pathfinding.astar_find_path(tilemap_node, obstacles_tilemap, unit.position, destination, get_living_units())
 		var number_of_tiles_moved = path.size() - 1
 		if distance_cap < number_of_tiles_moved:
 			number_of_tiles_moved = distance_cap
@@ -171,6 +162,8 @@ func move_to(unit, destination, speed, distance_cap: int = -1):
 		tween_along_path(unit, path, 0.4, distance_cap)
 	
 	unit.update_ap(current_movement_ap_cost*-1)
+	# Ends any active ability (e.g. Teleport) now that the move is done
+	unpress_ability_buttons()
 	movement_speed = walk_speed
 	current_movement_ap_cost = default_movement_ap_cost
 
@@ -243,15 +236,10 @@ func attack(attack_tile: Vector2i):
 
 	attack_tile_unit.process_damage(current_unit.data.base_attack_damage, current_unit)
 	$AttackButton.set_pressed(false)
-	has_attacked = true
+	current_unit.has_attacked = true
 
 func _on_end_turn_pressed() -> void:
 	current_unit.end_turn()
-
-func load_ability_buttons():
-	if current_unit != null:
-		abilities_container.update_abilities(current_unit)
-
 
 func _on_move_button_toggled(toggled_on: bool) -> void:
 	if toggled_on == true:

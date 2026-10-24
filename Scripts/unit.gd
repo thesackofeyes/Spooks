@@ -5,15 +5,31 @@ class_name Unit
 
 const DEFEATED_MODULATE := Color(0.4, 0.4, 0.4, 0.6)
 
+signal stats_changed(unit)
+signal defeated(unit, attacker)
+
 @onready var sprite = $Sprite2D
 @onready var sprite_animation_player = $Sprite2D/AnimationPlayer
-@onready var combat_node = get_parent().get_parent()
 var state_machine: Dictionary = {}
 var current_state
 
-var current_hp: int
-var current_ap: int
-var current_moves: int
+# Setters announce changes so UI can update when needed instead of every frame
+var current_hp: int:
+	set(value):
+		current_hp = value
+		stats_changed.emit(self)
+var current_ap: int:
+	set(value):
+		current_ap = value
+		stats_changed.emit(self)
+var current_moves: int:
+	set(value):
+		current_moves = value
+		stats_changed.emit(self)
+var has_attacked: bool = false:
+	set(value):
+		has_attacked = value
+		stats_changed.emit(self)
 
 func _ready() -> void:
 	sprite.texture = data.sprite
@@ -32,6 +48,10 @@ func _ready() -> void:
 func start_turn():
 	change_state("Idle")
 	sprite_animation_player.play("active_unit")
+	# Refresh per-turn resources. AP is added to (unspent AP carries over)
+	update_ap(data.stamina)
+	current_moves = data.speed
+	has_attacked = false
 
 func end_turn():
 	sprite_animation_player.stop()
@@ -74,13 +94,11 @@ func unit_defeated(attacker: Unit):
 	if !data.player_unit:
 		attacker.data.current_xp += data.experience_reward
 		print("Attacker ", attacker.data.unit_class, attacker.data.unit_subclass, " gains ", data.experience_reward, " XP. Total XP: ", attacker.data.current_xp)
-		
-	combat_node.check_combat_end_conditions()
+
+	defeated.emit(self, attacker)
 
 func update_ap(value: int):
 	current_ap = max(current_ap + value, 0)
-	combat_node.unpress_ability_buttons()
-	combat_node.load_ability_buttons()
 
 func _process(delta):
 	if current_state != state_machine["Waiting"]:
