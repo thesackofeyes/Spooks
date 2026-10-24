@@ -13,6 +13,8 @@ var hover_cell := Vector2i.ZERO
 var hover_colour := DEFAULT_HOVER_COLOUR
 var overlay_colour := DEFAULT_HOVER_COLOUR
 var overlay_path: Array[Vector2i] = [] # Grid cells
+var destination_cell := Vector2i(-1, -1) # Where the selected action will put the unit, if anywhere
+var destination_colour := AbilityEffect.DESTINATION_COLOUR
 
 func _ready():
 	z_index = 100 # Always draw on top
@@ -61,12 +63,17 @@ func _draw():
 	if hover_cell == Vector2i(-1, -1):
 		return
 
-	# Movement path / attack line. Skips the hovered cell so its colour isn't blended
+	# Movement path / attack line. Skips the hovered and destination cells so
+	# their colours aren't blended with the path's
 	for cell in overlay_path:
-		if cell != hover_cell:
+		if cell != hover_cell and cell != destination_cell:
 			_draw_tile(cell, overlay_colour)
 
-	_draw_tile(hover_cell, hover_colour)
+	if hover_cell != destination_cell:
+		_draw_tile(hover_cell, hover_colour)
+
+	if destination_cell != Vector2i(-1, -1):
+		_draw_tile(destination_cell, destination_colour)
 
 func _unhandled_input(event):
 	if event is InputEventMouseButton and event.pressed:

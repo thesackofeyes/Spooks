@@ -4,9 +4,9 @@ extends AbilityEffect
 func _init() -> void:
 	colour = MOVEMENT_COLOUR
 
-# Only called for valid targets, which teleport always lands on exactly
-func get_hover_colour(_target: Vector2i) -> Color:
-	return DESTINATION_COLOUR
+# Teleport always lands exactly on the target
+func get_destination(target: Vector2i) -> Vector2i:
+	return target
 
 func validate_target(target: Vector2i) -> String:
 	if not combat.is_cell_free(target):

@@ -134,15 +134,18 @@ func update_hover_preview() -> void:
 	var cell = hover_grid.hover_cell
 	if active_effect == null or cell == Vector2i(-1, -1):
 		hover_grid.hover_colour = HoverGrid.DEFAULT_HOVER_COLOUR
+		hover_grid.destination_cell = AbilityEffect.NO_CELL
 		hover_grid.set_overlay_path([])
 		return
 
 	if active_effect.validate_target(cell) != "":
 		hover_grid.hover_colour = AbilityEffect.INVALID_COLOUR
 		hover_grid.overlay_colour = AbilityEffect.INVALID_COLOUR
+		hover_grid.destination_cell = AbilityEffect.NO_CELL
 	else:
-		hover_grid.hover_colour = active_effect.get_hover_colour(cell)
+		hover_grid.hover_colour = active_effect.colour
 		hover_grid.overlay_colour = active_effect.colour
+		hover_grid.destination_cell = active_effect.get_destination(cell)
 	hover_grid.set_overlay_path(active_effect.get_preview_cells(cell))
 
 # Corpses are excluded so they don't block pathfinding or get targeted

@@ -6,9 +6,11 @@ extends RefCounted
 class_name AbilityEffect
 
 const MOVEMENT_COLOUR := Color(1, 1, 0)
-const DESTINATION_COLOUR := Color(0, 0, 1) # Hovered tile the unit will end up on
+const DESTINATION_COLOUR := Color(0, 0, 1) # Tile the caster will end up on
 const DAMAGE_COLOUR := Color(0, 0, 0)
 const INVALID_COLOUR := Color(1, 0, 0)
+
+const NO_CELL := Vector2i(-1, -1)
 
 var ability: Ability # Data for this action (name, cost, range, damage...)
 var caster: Unit
@@ -46,9 +48,9 @@ func get_tooltip_body() -> String:
 func get_preview_cells(_target: Vector2i) -> Array:
 	return []
 
-# Colour of the hovered tile itself when the target is valid (preview cells use colour)
-func get_hover_colour(_target: Vector2i) -> Color:
-	return colour
+# Cell the caster will end up on for a valid target, or NO_CELL if this action doesn't move them
+func get_destination(_target: Vector2i) -> Vector2i:
+	return NO_CELL
 
 # "" if the target is valid, otherwise the reason it isn't (the action stays selected)
 func validate_target(_target: Vector2i) -> String:
