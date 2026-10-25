@@ -45,6 +45,14 @@ func _ready() -> void:
 	current_state = state_machine["Waiting"]
 	current_hp = data.base_hp
 
+# Stat-based bonuses added on top of an ability's base damage/range.
+# Placeholders until the stat scaling values are decided
+func get_damage_bonus() -> int:
+	return 0
+
+func get_range_bonus() -> int:
+	return 0
+
 func start_turn():
 	change_state("Idle")
 	sprite_animation_player.play("active_unit")

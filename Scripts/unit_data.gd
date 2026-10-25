@@ -38,8 +38,7 @@ class_name UnitData
 @export var presence: int = 5
 
 # Combat
-@export var base_attack_range: int = 1
-@export var base_attack_damage: int = 3
+@export var attack_ability: Ability
 
 # Abilities
 @export var abilities: Array[Ability] = []

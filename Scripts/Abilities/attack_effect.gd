@@ -6,10 +6,10 @@ func _init() -> void:
 	colour = DAMAGE_COLOUR
 
 func get_range() -> int:
-	return caster.data.base_attack_range
+	return ability.ability_range + caster.get_range_bonus()
 
 func get_damage() -> int:
-	return caster.data.base_attack_damage
+	return ability.damage + caster.get_damage_bonus()
 
 func get_tooltip_body() -> String:
 	return "Damage: " + str(get_damage()) + "\nRange: " + str(get_range())

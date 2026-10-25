@@ -9,9 +9,8 @@ Abilities
 			Note: Has no ability_script yet, so selecting it does nothing (white hover).
 				  Costs 8 AP but the Spook has 5 stamina, so it's only usable after banking AP for a turn.
 	- Per-unit basic attacks
-		Note: Attack is the shared Iron Sword (Abilities/iron_sword.tres); damage/range come from each unit's
-		      base_attack_damage / base_attack_range. Could add an attack ability field to UnitData so e.g. the
-		      Witch (range 5) has her own named attack.
+		This is implemented - but the new functions 'get bonus damage/range' need to be populated with strength bonuses
+		
 	- Teleport has no range limit (ability_range unused); teleport.tres has an unused damage = 5
 		Note: teleport will have multiple versions, with increased ranges and costs
 				this would be good to set up so that cost is modifed by how many tiles are teleported

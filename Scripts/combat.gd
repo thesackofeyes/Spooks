@@ -31,7 +31,6 @@ func _ready() -> void:
 	$MoveButton.button_group = action_button_group
 	$AttackButton.button_group = action_button_group
 	$MoveButton.ability = MOVE_ABILITY
-	$AttackButton.ability = ATTACK_ABILITY
 	abilities_container.button_group = action_button_group
 	abilities_container.ability_toggled.connect(_on_ability_toggled)
 
@@ -69,6 +68,8 @@ func _on_turn_started(unit) -> void:
 	clear_selected_action()
 	$MoveButton.unit = current_unit
 	$AttackButton.unit = current_unit
+	# Units without their own attack fall back to the shared Iron Sword
+	$AttackButton.ability = current_unit.data.attack_ability if current_unit.data.attack_ability else ATTACK_ABILITY
 	abilities_container.update_abilities(current_unit)
 	refresh_ui()
 

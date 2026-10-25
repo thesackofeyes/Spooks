@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="Ability" format=3 uid="uid://cfmrpla4ig4aa"]
+
+[ext_resource type="Script" uid="uid://bp34lrn2n88r5" path="res://Scripts/ability.gd" id="1_ability"]
+[ext_resource type="Script" uid="uid://cw3mveorcw3iu" path="res://Scripts/Abilities/attack_effect.gd" id="2_effect"]
+
+[resource]
+script = ExtResource("1_ability")
+ability_script = ExtResource("2_effect")
+name = "Scratch"
+description = "A basic attack. Damage and range come from the unit's stats."
+damage = 2
+compatible_subclasses = Array[String](["All"])
