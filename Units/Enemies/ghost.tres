@@ -12,6 +12,7 @@ hero_sprite_x = 2
 start_position = Vector2i(6, 6)
 unit_class = "Ghost"
 unit_subclass = "Small"
+flavour_text = "A small ghost that haunts this place. It is weak, but can be a nuisance if not dealt with."
 player_unit = false
 base_hp = 3
 speed = 1

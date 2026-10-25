@@ -2,12 +2,12 @@ Abilities
 	- Cast Abilities
 		- Salt and Iron
 			Note: Add Scripts/Abilities/salt_and_iron.gd (extends AbilityEffect) and Abilities/salt_and_iron.tres
-			      with ability_script set, then add it to a unit's abilities. No Combat changes needed.
+				  with ability_script set, then add it to a unit's abilities. No Combat changes needed.
 			      attack_effect.gd is a good reference (range, line of sight, target checks).
 			      Use ability.damage / ability.ability_range from the .tres; cost is charged automatically.
 		- Widdershins Strike
 			Note: Has no ability_script yet, so selecting it does nothing (white hover).
-			      Costs 8 AP but the Spook has 5 stamina, so it's only usable after banking AP for a turn.
+				  Costs 8 AP but the Spook has 5 stamina, so it's only usable after banking AP for a turn.
 	- Per-unit basic attacks
 		Note: Attack is the shared Iron Sword (Abilities/iron_sword.tres); damage/range come from each unit's
 		      base_attack_damage / base_attack_range. Could add an attack ability field to UnitData so e.g. the
@@ -19,11 +19,8 @@ Abilities
 Units
 	Enemies
 		- Create Enemy Info on Hover
-			- Portrait
-			- Flavour Text
-			Note: Hover detection is done - Combat.update_hovered_unit / show_unit_info shows a tooltip with
-			      Unit.get_display_name() and live HP. Next: add name / flavour text fields to UnitData, and
-			      reuse CharacterPortrait.update_portrait(unit) (already takes any unit) for a richer panel.
+			- Update flavour text font styles
+				Note: Add in third parameter, allowing for a smaller body text (this will require a new node in the scene)
 		- Enemy AI
 			Note: Enemy turns currently need End Turn clicking. Hook point is TurnManager.start_turn
 			      ("trigger AI behavior here"). The Idle/Acting/Waiting states are scaffolding for this.
@@ -46,11 +43,11 @@ Visuals
 		- Unique button visuals for single use actions (attack/movement)
 		- Alternate unique visuals for when not enough available AP to use ability
 		Note: Fill in GameButton._apply_visual_state() (Scripts/button.gd). States are already set:
-		      USED (Move at 0 / Attack spent), UNAFFORDABLE (not enough AP), UNAVAILABLE (enemy turn).
+			  USED (Move at 0 / Attack spent), UNAFFORDABLE (not enough AP), UNAVAILABLE (enemy turn).
 	- Hover colours: white = no action, yellow = movement path, blue = valid movement destination,
 	  black = attack, red = invalid. Colours live in AbilityEffect / HoverGrid constants.
 		Note: Move to an unreachable tile is yellow (walks as far as it can) rather than red - change in
-		      MoveEffect.validate_target if it should be invalid instead.
+			  MoveEffect.validate_target if it should be invalid instead.
 
 General Ideation:
 	-	Non Combat encounter solutions
@@ -63,4 +60,3 @@ General Ideation:
 	-	Levels + Map selection ideas - to flesh out after lore is firmed up, likely based on real life locations
 			Additional gameplay loop for traveling between locations, to reward awareness of surroundings, and the most efficient routes to encounters
 			this could be represented by a AP bonus, bonus turn or additional post encounter rewards
-

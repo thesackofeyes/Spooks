@@ -16,8 +16,8 @@ func _process(_delta):
 	if tooltip_instance.visible:
 		tooltip_instance.set_global_position(_get_tooltip_position())
 
-func show_tooltip(title: String, body: String):
-	tooltip_instance.set_content(title, body)
+func show_tooltip(title: String, body: String, image: Texture2D = null):
+	tooltip_instance.set_content(title, body, image)
 	# Same position as _process uses, so it doesn't jump on the next frame
 	tooltip_instance.show_at_position(_get_tooltip_position())
 

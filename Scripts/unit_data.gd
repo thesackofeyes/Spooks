@@ -20,6 +20,7 @@ class_name UnitData
 
 @export var unit_class: String = ""
 @export var unit_subclass: String = ""
+@export var flavour_text: String = ""
 
 @export var player_unit: bool = true
 @export var level: int = 1
