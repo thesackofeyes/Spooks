@@ -42,7 +42,10 @@ func setup(p_ability: Ability, p_caster: Unit, p_combat) -> void:
 
 # Tooltip body for this action's button. Title is the ability name
 func get_tooltip_body() -> String:
-	return ability.description + "\nCost: " + str(get_cost())
+	return ability.description
+
+func get_tooltip_cost() -> String:
+	return str(get_cost()) + " AP" if get_cost() > 0 else ""
 
 # Grid cells to highlight while hovering a target, already capped to range. [] for none
 func get_preview_cells(_target: Vector2i) -> Array:

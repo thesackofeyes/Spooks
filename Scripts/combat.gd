@@ -137,8 +137,9 @@ func update_hovered_unit() -> void:
 		TooltipManager.hide_tooltip()
 
 func show_unit_info(unit) -> void:
-	var unit_body = "HP: %d/%d\n%s" % [unit.current_hp, unit.data.base_hp, unit.data.flavour_text]
-	TooltipManager.show_tooltip(unit.get_display_name(), unit_body)
+	var unit_bodyA = "HP: %d/%d" % [unit.current_hp, unit.data.base_hp]
+	var unit_bodyB = "%s" % [unit.data.flavour_text]
+	TooltipManager.show_tooltip(unit.get_display_name(), unit_bodyA, unit_bodyB)
 
 # Colours the hover tile and preview from the selected action:
 # its own colour when the hovered target is valid, red when it isn't

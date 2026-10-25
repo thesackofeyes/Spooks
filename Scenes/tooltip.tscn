@@ -3,48 +3,49 @@
 [ext_resource type="Script" uid="uid://ccxmarb7db02t" path="res://Scripts/tooltip.gd" id="1_ogi1g"]
 
 [node name="Tooltip" type="Control" unique_id=1202108485]
-custom_minimum_size = Vector2(200, 48)
 layout_mode = 3
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -100.0
-offset_top = -100.0
-offset_right = 100.0
-offset_bottom = -52.0
-grow_horizontal = 2
-grow_vertical = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
+anchors_preset = 0
 script = ExtResource("1_ogi1g")
 
 [node name="PanelContainer" type="PanelContainer" parent="." unique_id=872509400]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+layout_mode = 0
 
-[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer" unique_id=771420792]
+[node name="MarginContainer" type="MarginContainer" parent="PanelContainer" unique_id=1583920417]
 layout_mode = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
 
-[node name="Icon" type="TextureRect" parent="PanelContainer/HBoxContainer" unique_id=1092470891]
+[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/MarginContainer" unique_id=771420792]
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 0
+
+[node name="Icon" type="TextureRect" parent="PanelContainer/MarginContainer/HBoxContainer" unique_id=1092470891]
 custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
 expand_mode = 1
 stretch_mode = 5
 
-[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer" unique_id=637878695]
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/MarginContainer" unique_id=637878695]
 layout_mode = 2
 
-[node name="Title" type="Label" parent="PanelContainer/VBoxContainer" unique_id=858611394]
-custom_minimum_size = Vector2(200, 23)
+[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer" unique_id=1428604237]
+layout_mode = 2
+theme_override_constants/separation = 9
+
+[node name="Title" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer" unique_id=858611394]
 layout_mode = 2
 
-[node name="Body" type="RichTextLabel" parent="PanelContainer/VBoxContainer" unique_id=397769620]
-custom_minimum_size = Vector2(200, 23)
+[node name="Body" type="RichTextLabel" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer" unique_id=397769620]
 layout_mode = 2
+size_flags_horizontal = 10
+fit_content = true
+autowrap_mode = 0
+
+[node name="BodySmall" type="RichTextLabel" parent="PanelContainer/MarginContainer/VBoxContainer" unique_id=718655988]
+layout_mode = 2
+theme_override_font_sizes/normal_font_size = 12
+bbcode_enabled = true
 fit_content = true

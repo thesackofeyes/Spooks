@@ -31,7 +31,7 @@ func get_route(target: Vector2i) -> Array:
 # The basic attack's tooltip omits cost, and its range would read as 1 despite the dash
 func get_tooltip_body() -> String:
 	return ability.description + "\nDamage: " + str(get_damage()) \
-		+ "\nReach: " + str(MAX_DASH + 1) + " tiles\nCost: " + str(get_cost())
+		+ "\nReach: " + str(MAX_DASH + 1) + " tiles"
 
 func get_preview_cells(target: Vector2i) -> Array:
 	var route = get_route(target)

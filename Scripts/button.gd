@@ -60,12 +60,12 @@ func _apply_visual_state() -> void:
 func get_tooltip_content() -> Array:
 	if ability == null or unit == null:
 		return []
-	return [ability.name, AbilityEffect.create_for_tooltip(ability, unit).get_tooltip_body()]
+	return [ability.name, AbilityEffect.create_for_tooltip(ability, unit).get_tooltip_cost(), AbilityEffect.create_for_tooltip(ability, unit).get_tooltip_body()]
 
 func _on_mouse_entered() -> void:
 	var content = get_tooltip_content()
 	if not content.is_empty():
-		TooltipManager.show_tooltip(content[0], content[1])
+		TooltipManager.show_tooltip(content[0], content[1], content[2])
 
 func _on_mouse_exited() -> void:
 	TooltipManager.hide_tooltip()
