@@ -88,6 +88,16 @@ func refresh_ui() -> void:
 	if current_unit == null:
 		return
 
+	if current_unit.is_acting():
+		# Nothing can be selected or ended until the current action finishes
+		$MoveButton.set_visual_state(GameButton.VisualState.UNAVAILABLE)
+		$AttackButton.set_visual_state(GameButton.VisualState.UNAVAILABLE)
+		$EndTurn.set_visual_state(GameButton.VisualState.UNAVAILABLE)
+		abilities_container.set_unavailable()
+		$CharacterPortrait.update_portrait(current_unit)
+		return
+
+	$EndTurn.set_visual_state(GameButton.VisualState.AVAILABLE)
 	if current_unit.data.player_unit == false:
 		# Disable Movement/Attack buttons during enemy turns
 		$MoveButton.set_visual_state(GameButton.VisualState.UNAVAILABLE)
@@ -196,10 +206,13 @@ func find_walk_path(unit, cell: Vector2i) -> Array:
 func place_unit(unit, cell: Vector2i) -> void:
 	unit.position = tilemap_node.position + Utils.cell_to_local(cell)
 
-# Walks a unit towards a cell, up to max_tiles. Returns the number of tiles moved
+# Walks a unit towards a cell, up to max_tiles. Await it: returns the number of tiles
+# moved once the walk finishes
 func walk_unit(unit, cell: Vector2i, max_tiles: int) -> int:
 	var path = find_walk_path(unit, cell)
-	tween_along_path(unit, path, WALK_STEP_DURATION, max_tiles)
+	var tween = tween_along_path(unit, path, WALK_STEP_DURATION, max_tiles)
+	if tween != null:
+		await tween.finished
 	return clampi(path.size() - 1, 0, max_tiles)
 
 # Unpresses whichever Move/Attack/ability button is active, if any
@@ -209,7 +222,7 @@ func clear_selected_action():
 		pressed_button.set_pressed(false)
 
 func _on_grid_clicked(visual_cell: Vector2i):
-	if visual_cell == Vector2i(-1, -1) or active_effect == null:
+	if visual_cell == Vector2i(-1, -1) or active_effect == null or current_unit.is_acting():
 		return
 
 	var error = active_effect.validate_target(visual_cell)
@@ -217,11 +230,21 @@ func _on_grid_clicked(visual_cell: Vector2i):
 		print(error, ", action preserved")
 		return
 
-	# Keep a reference, as clearing the selection below drops active_effect
+	# Keep a reference, as clearing the selection below drops active_effect. Awaiting
+	# execute holds it here too, so effects that await animations aren't freed mid-action.
+	# Cost is charged and the selection cleared first, so the action can't be re-cast while it plays
 	var effect = active_effect
-	effect.execute(visual_cell)
-	current_unit.update_ap(-effect.get_cost())
+	var unit = current_unit
+	unit.change_state("Acting")
+	unit.update_ap(-effect.get_cost())
 	clear_selected_action()
+	refresh_ui()
+	await effect.execute(visual_cell)
+
+	# A unit defeated mid-action has already gone to Waiting
+	if unit.is_acting():
+		unit.change_state("Idle")
+	refresh_ui()
 
 # Moves a unit along a path of grid cells using Tweens. speed is the duration of each step;
 # trans shapes each step (TRANS_LINEAR reads as one continuous dash rather than tile by tile).

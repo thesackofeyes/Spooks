@@ -71,6 +71,10 @@ func change_state(new_state: String):
 	current_state = state_machine[new_state]
 	current_state.enter(self)
 
+# Mid-action, so no new actions or ending the turn until it finishes
+func is_acting() -> bool:
+	return current_state == state_machine["Acting"]
+
 func process_damage(amount: int, attacker: Unit):
 	var updated_hp = current_hp - amount
 	current_hp = max(updated_hp, 0)

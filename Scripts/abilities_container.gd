@@ -23,6 +23,11 @@ func update_abilities(unit):
 
 	refresh_affordability(unit)
 
+# Disables every ability button, e.g. while the unit is mid-action
+func set_unavailable():
+	for ability_button in ability_container.get_children():
+		ability_button.set_visual_state(GameButton.VisualState.UNAVAILABLE)
+
 # Marks buttons for abilities the unit can't currently afford
 func refresh_affordability(unit):
 	for ability_button in ability_container.get_children():

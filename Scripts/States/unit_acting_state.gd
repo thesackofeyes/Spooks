@@ -1,20 +1,5 @@
+# The unit is carrying out an action (moving, attacking, playing an animation).
+# Combat enters this before an action runs and returns to Idle once it finishes;
+# while in it, the action and End Turn buttons are unavailable
 extends State
 class_name UnitActingState
-
-var action_completed: bool = false  # tracks if the unit finished acting
-var action_timer: float = 0.0       # optional delay for animations
-
-func enter(unit: Node) -> void:
-	pass
-	action_completed = false
-
-func update(unit: Node, delta: float) -> void:
-	if not action_completed:
-		action_completed = true
-		unit.change_state("Waiting")  # after acting
-
-func exit(unit: Node) -> void:
-	# Stop animation or reset as needed
-	if unit.has_node("AnimatedSprite2D"):
-		var sprite = unit.get_node("AnimatedSprite2D")
-		sprite.stop()

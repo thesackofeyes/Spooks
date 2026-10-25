@@ -19,9 +19,13 @@ func get_preview_cells(target: Vector2i) -> Array:
 	return Utils.get_line_cells(caster.get_cell(), target).slice(0, get_range() + 1)
 
 func validate_target(target: Vector2i) -> String:
-	if Utils.grid_distance(caster.get_cell(), target) > get_range():
+	return validate_attack(caster.get_cell(), target)
+
+# Attack checks from any cell, so effects that move before striking can check their landing tile
+func validate_attack(from: Vector2i, target: Vector2i) -> String:
+	if Utils.grid_distance(from, target) > get_range():
 		return "Attacking out of range"
-	if not combat.has_line_of_sight(caster.get_cell(), target):
+	if not combat.has_line_of_sight(from, target):
 		return "No line of sight to target"
 
 	var target_unit = combat.get_unit_at_cell(target)

@@ -18,4 +18,4 @@ func get_destination(target: Vector2i) -> Vector2i:
 	return preview.back() if not preview.is_empty() else NO_CELL
 
 func execute(target: Vector2i) -> void:
-	caster.current_moves -= combat.walk_unit(caster, target, caster.current_moves)
+	caster.current_moves -= await combat.walk_unit(caster, target, caster.current_moves)

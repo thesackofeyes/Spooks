@@ -19,7 +19,7 @@ var combat # Combat scene, for grid queries like get_unit_at_cell or has_line_of
 # Preview colour (and default hover colour) when the target is valid
 var colour := DAMAGE_COLOUR
 
-# Effect for an ability, or null if it has no script yet (e.g. Widdershins Strike)
+# Effect for an ability, or null if it has no script yet
 static func create(p_ability: Ability, p_caster: Unit, p_combat) -> AbilityEffect:
 	if p_ability.ability_script == null:
 		return null
@@ -56,9 +56,19 @@ func get_destination(_target: Vector2i) -> Vector2i:
 func validate_target(_target: Vector2i) -> String:
 	return ""
 
-# Carries out the action on a validated target. Combat charges get_cost() afterwards
+# Carries out the action on a validated target. Combat charges get_cost() just before,
+# and awaits this, so it can await tweens/animations
 func execute(_target: Vector2i) -> void:
 	pass
+
+# Seconds per tile for movement this action animates, from the ability's movement_speed.
+# 0 for instant movement
+func get_step_duration() -> float:
+	if ability == null or ability.movement_speed == 0:
+		return combat.WALK_STEP_DURATION
+	if ability.movement_speed < 0:
+		return 0.0
+	return combat.WALK_STEP_DURATION / ability.movement_speed
 
 func get_cost() -> int:
 	return ability.cost if ability != null else 0

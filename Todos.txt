@@ -5,9 +5,6 @@ Abilities
 				  with ability_script set, then add it to a unit's abilities. No Combat changes needed.
 			      attack_effect.gd is a good reference (range, line of sight, target checks).
 			      Use ability.damage / ability.ability_range from the .tres; cost is charged automatically.
-		- Widdershins Strike
-			Note: Has no ability_script yet, so selecting it does nothing (white hover).
-				  Costs 8 AP but the Spook has 5 stamina, so it's only usable after banking AP for a turn.
 	- Per-unit basic attacks
 		This is implemented - but the new functions 'get bonus damage/range' need to be populated with strength bonuses
 		

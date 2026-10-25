@@ -1,11 +1,16 @@
 [gd_resource type="Resource" script_class="Ability" format=3 uid="uid://vyqwxu8evpb0"]
 
 [ext_resource type="Script" uid="uid://bp34lrn2n88r5" path="res://Scripts/ability.gd" id="1_6w37w"]
+[ext_resource type="Script" uid="uid://b42drk4rfni4r" path="res://Scripts/Abilities/widdershins_strike.gd" id="2_effect"]
 
 [resource]
 script = ExtResource("1_6w37w")
+ability_script = ExtResource("2_effect")
 name = "Widdershins Strike"
 icon_x = 1
 description = "An attack with a staff, striking counter to the clock."
+ability_range = 2
+damage = 8
+movement_speed = 5
 cost = 8
 compatible_subclasses = Array[String](["All"])
