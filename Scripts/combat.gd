@@ -223,10 +223,12 @@ func _on_grid_clicked(visual_cell: Vector2i):
 	current_unit.update_ap(-effect.get_cost())
 	clear_selected_action()
 
-# Moves a unit along a path of grid cells using Tweens
-func tween_along_path(unit: Node2D, path: Array, speed: float, distance_cap: int, overlap: float = -0.5):
+# Moves a unit along a path of grid cells using Tweens. speed is the duration of each step;
+# trans shapes each step (TRANS_LINEAR reads as one continuous dash rather than tile by tile).
+# Returns the Tween so callers can await finished, or null for an empty path
+func tween_along_path(unit: Node2D, path: Array, speed: float, distance_cap: int, overlap: float = -0.5, trans: Tween.TransitionType = Tween.TRANS_SINE) -> Tween:
 	if path.size() == 0:
-		return
+		return null
 
 	var tween := create_tween()
 	tween.set_parallel(false)
@@ -239,12 +241,14 @@ func tween_along_path(unit: Node2D, path: Array, speed: float, distance_cap: int
 
 		# Move unit to next tile
 		tween.tween_property(unit, "position", destination, speed)\
-			.set_trans(Tween.TRANS_SINE)\
+			.set_trans(trans)\
 			.set_ease(Tween.EASE_IN_OUT)
 
 		# If overlap > 0, slightly reduce pause before next tween
 		if overlap > 0 and i < path.size() - 1:
 			tween.tween_interval(overlap)
+
+	return tween
 
 func _on_end_turn_pressed() -> void:
 	current_unit.end_turn()
@@ -259,7 +263,7 @@ func _on_ability_toggled(ability_button: AbilityButton, toggled_on: bool) -> voi
 	_on_action_toggled(ability_button, toggled_on)
 
 # Every action button (Move, Attack, abilities) selects its effect the same way.
-# Abilities without a script (e.g. Widdershins Strike for now) give no effect
+# Abilities without a script give no effect
 func _on_action_toggled(button: GameButton, toggled_on: bool) -> void:
 	if toggled_on:
 		active_button = button
