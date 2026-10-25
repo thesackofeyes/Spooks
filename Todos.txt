@@ -13,13 +13,13 @@ Abilities
 		      base_attack_damage / base_attack_range. Could add an attack ability field to UnitData so e.g. the
 		      Witch (range 5) has her own named attack.
 	- Teleport has no range limit (ability_range unused); teleport.tres has an unused damage = 5
+		Note: teleport will have multiple versions, with increased ranges and costs
+				this would be good to set up so that cost is modifed by how many tiles are teleported
 
 Units
 	Enemies
 		- Create Enemy Info on Hover
-			- Name
 			- Portrait
-			- HP
 			- Flavour Text
 			Note: Hover detection is done - Combat.update_hovered_unit / show_unit_info shows a tooltip with
 			      Unit.get_display_name() and live HP. Next: add name / flavour text fields to UnitData, and
@@ -52,8 +52,6 @@ Visuals
 		Note: Move to an unreachable tile is yellow (walks as far as it can) rather than red - change in
 		      MoveEffect.validate_target if it should be invalid instead.
 
-
-
 General Ideation:
 	-	Non Combat encounter solutions
 		- Pacifist options:
@@ -61,4 +59,8 @@ General Ideation:
 			-	Diplomacy (Skill based)
 			-	Stealth (X turns without being in enemy range)
 				Note: TurnManager.round_started + Utils.grid_distance / Combat.has_line_of_sight cover the checks.
+	-	Add ability to change map size for different encounters
+	-	Levels + Map selection ideas - to flesh out after lore is firmed up, likely based on real life locations
+			Additional gameplay loop for traveling between locations, to reward awareness of surroundings, and the most efficient routes to encounters
+			this could be represented by a AP bonus, bonus turn or additional post encounter rewards
 
