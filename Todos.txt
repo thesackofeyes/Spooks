@@ -14,9 +14,6 @@ Abilities
 
 Units
 	Enemies
-		- Create Enemy Info on Hover
-			- Update flavour text font styles
-				Note: Add in third parameter, allowing for a smaller body text (this will require a new node in the scene)
 		- Enemy AI
 			Note: Enemy turns currently need End Turn clicking. Hook point is TurnManager.start_turn
 			      ("trigger AI behavior here"). The Idle/Acting/Waiting states are scaffolding for this.
