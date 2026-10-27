@@ -5,6 +5,10 @@ class_name Unit
 
 const DEFEATED_MODULATE := Color(0.4, 0.4, 0.4, 0.6)
 
+# Taken off the unit's next turn per stack of Slowed
+const SLOWED_MOVE_PENALTY := 1
+const SLOWED_AP_PENALTY := 2
+
 signal stats_changed(unit)
 signal defeated(unit, attacker)
 
@@ -29,6 +33,16 @@ var current_moves: int:
 var has_attacked: bool = false:
 	set(value):
 		has_attacked = value
+		stats_changed.emit(self)
+# Each stack adds 1 to the damage this unit takes. Lasts the rest of the fight
+var weakened_stacks: int = 0:
+	set(value):
+		weakened_stacks = value
+		stats_changed.emit(self)
+# Each stack reduces moves and AP gain on this unit's next turn. All stacks clear when that turn starts
+var slowed_stacks: int = 0:
+	set(value):
+		slowed_stacks = value
 		stats_changed.emit(self)
 
 func _ready() -> void:
@@ -57,8 +71,9 @@ func start_turn():
 	change_state("Idle")
 	sprite_animation_player.play("active_unit")
 	# Refresh per-turn resources. AP is added to (unspent AP carries over)
-	update_ap(data.stamina)
-	current_moves = data.speed
+	update_ap(max(data.stamina - slowed_stacks * SLOWED_AP_PENALTY, 0))
+	current_moves = max(data.speed - slowed_stacks * SLOWED_MOVE_PENALTY, 0)
+	slowed_stacks = 0
 	has_attacked = false
 
 func end_turn():

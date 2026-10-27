@@ -56,4 +56,5 @@ func execute(target: Vector2i) -> void:
 	var route = get_route(target).slice(1)
 	var tween = combat.tween_along_path(caster, route, get_step_duration(), -1, -0.5, Tween.TRANS_LINEAR)
 	await tween.finished
-	combat.get_unit_at_cell(target).process_damage(get_damage(), caster)
+	var target_unit = combat.get_unit_at_cell(target)
+	target_unit.process_damage(get_damage(target_unit), caster)

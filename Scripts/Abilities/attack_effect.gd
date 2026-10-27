@@ -8,8 +8,13 @@ func _init() -> void:
 func get_range() -> int:
 	return ability.ability_range + caster.get_range_bonus()
 
-func get_damage() -> int:
-	return ability.damage + caster.get_damage_bonus()
+# Base damage plus the caster's strength bonus, plus the target's Weakened stacks when
+# there is a target. Tooltips call this without one, so they show the unmodified damage
+func get_damage(target_unit: Unit = null) -> int:
+	var damage = ability.damage + caster.get_damage_bonus()
+	if target_unit != null:
+		damage += target_unit.weakened_stacks
+	return damage
 
 func get_tooltip_body() -> String:
 	return "Damage: " + str(get_damage()) + "\nRange: " + str(get_range())
@@ -36,5 +41,6 @@ func validate_attack(from: Vector2i, target: Vector2i) -> String:
 	return ""
 
 func execute(target: Vector2i) -> void:
-	combat.get_unit_at_cell(target).process_damage(get_damage(), caster)
+	var target_unit = combat.get_unit_at_cell(target)
+	target_unit.process_damage(get_damage(target_unit), caster)
 	caster.has_attacked = true

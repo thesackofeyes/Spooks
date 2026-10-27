@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="Ability" format=3]
+
+[ext_resource type="Script" uid="uid://bp34lrn2n88r5" path="res://Scripts/ability.gd" id="1_ability"]
+[ext_resource type="Script" path="res://Scripts/Abilities/salt_and_iron.gd" id="2_effect"]
+
+[resource]
+script = ExtResource("1_ability")
+ability_script = ExtResource("2_effect")
+name = "Salt and Iron"
+icon_x = 2
+description = "A handful of salt and cold iron that saps a creature's strength."
+ability_range = 4
+damage = 1
+cost = 3
+compatible_subclasses = Array[String](["All"])

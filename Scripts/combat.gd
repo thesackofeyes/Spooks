@@ -138,8 +138,15 @@ func update_hovered_unit() -> void:
 
 func show_unit_info(unit) -> void:
 	var unit_bodyA = "HP: %d/%d" % [unit.current_hp, unit.data.base_hp]
-	var unit_bodyB = "%s" % [unit.data.flavour_text]
-	TooltipManager.show_tooltip(unit.get_display_name(), unit_bodyA, unit_bodyB)
+	var lines = []
+	if unit.weakened_stacks > 0:
+		lines.append("Weakened x%d: takes +%d damage" % [unit.weakened_stacks, unit.weakened_stacks])
+	if unit.slowed_stacks > 0:
+		lines.append("Slowed x%d: -%d moves, -%d AP next turn" % [unit.slowed_stacks,
+			unit.slowed_stacks * Unit.SLOWED_MOVE_PENALTY, unit.slowed_stacks * Unit.SLOWED_AP_PENALTY])
+	if unit.data.flavour_text != "":
+		lines.append(unit.data.flavour_text)
+	TooltipManager.show_tooltip(unit.get_display_name(), unit_bodyA, "\n".join(lines))
 
 # Colours the hover tile and preview from the selected action:
 # its own colour when the hovered target is valid, red when it isn't

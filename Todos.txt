@@ -1,10 +1,5 @@
 Abilities
-	- Cast Abilities
-		- Salt and Iron
-			Note: Add Scripts/Abilities/salt_and_iron.gd (extends AbilityEffect) and Abilities/salt_and_iron.tres
-				  with ability_script set, then add it to a unit's abilities. No Combat changes needed.
-			      attack_effect.gd is a good reference (range, line of sight, target checks).
-			      Use ability.damage / ability.ability_range from the .tres; cost is charged automatically.
+	- Salt and Iron needs an icon: it uses slot 2 (icon_x = 2) of Assets/Icons/ability_sprite_sheet.png, which is empty
 	- Per-unit basic attacks
 		This is implemented - but the new functions 'get bonus damage/range' need to be populated with strength bonuses
 		
@@ -16,10 +11,10 @@ Units
 	Enemies
 		- Enemy AI
 			Note: Enemy turns currently need End Turn clicking. Hook point is TurnManager.start_turn
-			      ("trigger AI behavior here"). The Idle/Acting/Waiting states are scaffolding for this.
-			      AI can reuse AbilityEffect validate_target / execute, Combat.find_walk_path,
-			      get_unit_at_cell, has_line_of_sight and Utils.grid_distance.
-			      Hidden EndTurn / portrait lines for enemy turns are commented out in Combat.refresh_ui.
+				  ("trigger AI behavior here"). The Idle/Acting/Waiting states are scaffolding for this.
+				  AI can reuse AbilityEffect validate_target / execute, Combat.find_walk_path,
+				  get_unit_at_cell, has_line_of_sight and Utils.grid_distance.
+				  Hidden EndTurn / portrait lines for enemy turns are commented out in Combat.refresh_ui.
 
 Combat
 	- Victory / Game Over
