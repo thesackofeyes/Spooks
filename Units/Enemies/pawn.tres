@@ -2,14 +2,11 @@
 
 [ext_resource type="Script" uid="uid://bp34lrn2n88r5" path="res://Scripts/ability.gd" id="1_osodk"]
 [ext_resource type="Script" uid="uid://ckohomhh5krns" path="res://Scripts/unit_data.gd" id="2_awabd"]
-[ext_resource type="Texture2D" uid="uid://b4n514ekiqxpa" path="res://Assets/Characters/Pawn/Pawn_Idle.png" id="3_pawn"]
+[ext_resource type="Texture2D" uid="uid://pp8gw4wve08t" path="res://Assets/Characters/Bone Collector.png" id="3_n6qf0"]
 
 [resource]
 script = ExtResource("2_awabd")
-sprite = ExtResource("3_pawn")
-sprite_h_frames = 8
-sprite_v_frames = 1
-sprite_scale = 0.7
+sprite = ExtResource("3_n6qf0")
 hero_sprite_x = 3
 start_position = Vector2i(6, 4)
 unit_class = "Pawn"
